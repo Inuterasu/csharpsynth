@@ -25,7 +25,8 @@ namespace CSharpSynth.Banks
         public InstrumentBank(int sampleRate, string bankfile)
         {
             this.SampleRate_ = sampleRate;
-            loadBank(bankfile);
+            lastbankpath = bankfile;
+            loadBank(null, null);
             reCalculateMemoryUsage();
         }
         public InstrumentBank(int sampleRate, string bankfile, byte[] Programs, byte[] DrumPrograms)
@@ -34,19 +35,7 @@ namespace CSharpSynth.Banks
             lastbankpath = bankfile;
             loadBank(Programs, DrumPrograms);
             reCalculateMemoryUsage();
-        }
-        public void loadBank(string bankfile)
-        {
-            Clear();
-            Bank.Capacity = BankManager.DEFAULT_BANK_SIZE;
-            DrumBank.Capacity = BankManager.DEFAULT_DRUMBANK_SIZE;
-            for (int x = 0; x < BankManager.DEFAULT_BANK_SIZE; x++)
-                Bank.Add(null);
-            for (int x = 0; x < BankManager.DEFAULT_DRUMBANK_SIZE; x++)
-                DrumBank.Add(null);
-            loadStream(File.Open(bankfile, FileMode.Open), Path.GetDirectoryName(bankfile) + "\\", null, null);
-            this.lastbankpath = bankfile;
-        }
+        }        
         public void loadBank(byte[] Programs, byte[] DrumPrograms)
         {
             if (File.Exists(lastbankpath) == false)
