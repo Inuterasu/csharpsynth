@@ -91,7 +91,8 @@ namespace CSharpSynth.Wave
         public void Close()
         {
             BR.Close();
-            BR.Dispose();
+			/* There is no Dispose() available in mono project */
+            //BR.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CSharpSynth.Banks;
 using CSharpSynth.Sequencer;
@@ -8,8 +9,8 @@ namespace CSharpSynth.Synthesis
 {
     public class StreamSynthesizer
     {
-        //--Variables
-        private InstrumentBank bank;
+        //--Variables		
+		private InstrumentBank bank;
         private float[,] sampleBuffer;
         private int rawBufferLength;
         private Voice[] voicePool;
