@@ -14,12 +14,12 @@ namespace CSharpSynth.Synthesis
         public byte Note { get { return note; } }
         public byte Channel { get { return channel; } }
 		
-//        //--Public Methods
-//        public NoteRegistryKey(byte channel, byte note)
-//        {
-//            this.note = note;
-//            this.channel = channel;
-//        }
+        //--Public Methods
+        public NoteRegistryKey(byte channel, byte note)
+        {
+            this.note = note;
+            this.channel = channel;
+        }
 //        public override bool Equals(object obj)
 //        {
 //            if (obj is NoteRegistryKey)
