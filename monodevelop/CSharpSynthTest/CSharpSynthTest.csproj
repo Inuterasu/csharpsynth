@@ -53,4 +53,7 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="HowTo.txt" />
+  </ItemGroup>
 </Project>
