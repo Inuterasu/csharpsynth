@@ -30,6 +30,15 @@ namespace CSharpSynth.Synthesis
         private float gainControl = .3f;
         //--Enum
         private enum VoiceState { None, Attack, Sustain, Hold, Release }
+        //--Public Properties
+        public bool isInUse
+        {
+            get { return inUse; }
+        }
+        public int Channel
+        {
+            get { return channel; }
+        }
         //--Public Methods
         public Voice(StreamSynthesizer synth)
         {
@@ -104,10 +113,6 @@ namespace CSharpSynth.Synthesis
         {
             state = VoiceState.None;
             inUse = false;
-        }
-        public bool isInUse
-        {
-            get { return inUse; }
         }
         public void setPan(float pan)
         {

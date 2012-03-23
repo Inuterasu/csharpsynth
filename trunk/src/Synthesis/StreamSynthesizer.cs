@@ -180,9 +180,9 @@ namespace CSharpSynth.Synthesis
                 volPositions_[channel] = position;
         }
 		
-        public void setPitchBend(int channel, float semitones)
+        public void setPitchBend(int channel, double semitones)
         {
-            if (channel > -1 && channel < tunePositions_.Length && semitones >= -12.00f && semitones <= 12.00f)
+            if (channel > -1 && channel < tunePositions_.Length && semitones >= -12.00 && semitones <= 12.00)
             {
                 tunePositions_[channel] = semitones;
             }
@@ -197,7 +197,7 @@ namespace CSharpSynth.Synthesis
         {
             //Reset Pan Positions back to 0.0f
             Array.Clear(panPositions_, 0, panPositions_.Length);
-            //Set Tuning Positions back to 0.0f
+            //Set Tuning Positions back to 0.0
             Array.Clear(tunePositions_, 0, tunePositions_.Length);
             //Reset Vol Positions back to 1.00f
             for (int x = 0; x < volPositions_.Length; x++)
@@ -288,7 +288,23 @@ namespace CSharpSynth.Synthesis
             }
             keyRegistry.Clear();
         }
-		
+
+        public void NoteOffAll(bool immediate, int channel)
+        {
+            LinkedListNode<Voice> node = activeVoices.First;
+            while (node != null)
+            {
+                if (node.Value.Channel == channel)
+                {
+                    if (immediate)
+                        node.Value.StopImmediately();
+                    else
+                        node.Value.Stop();
+                }
+                node = node.Next;
+            }
+        }
+
         public void GetNext(byte[] buffer)
         {//Call this to process the next part of audio and return it in raw form.
             ClearWorkingBuffer();
