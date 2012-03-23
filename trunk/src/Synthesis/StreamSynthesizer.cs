@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using CSharpSynth.Banks;
 using CSharpSynth.Sequencer;
@@ -9,7 +8,9 @@ namespace CSharpSynth.Synthesis
 {
     public class StreamSynthesizer
     {
-        //--Variables		
+		
+        #region Private Variable
+		
 		private InstrumentBank bank;
         private float[,] sampleBuffer;
         private int rawBufferLength;
@@ -22,15 +23,22 @@ namespace CSharpSynth.Synthesis
         private double[] tunePositions_;
         private MidiSequencer seq;
         private List<BasicAudioEffect> effects;
-        //Set "once parameters"
-        private int audioChannels = 1;
-        private int sampleRate = 44100;
-        private int samplesperBuffer = 2000;
-        private int polyphony = 40; //total number of voices available
-        private int maxnotepoly = 2; //how many of the same note can be playing at once
+				
+        readonly private int audioChannels = 1;
+        readonly private int sampleRate = 44100;
+        readonly private int samplesperBuffer = 2000;
+		
+		//total number of voices available
+        private int polyphony = 40; 
+		//how many of the same note can be playing at once
+        private int maxnotepoly = 2; 
         //Tweakable Parameters, anytime via properties
         private float MainVolume = 1.0f; //Not too high or will cause clipping
-        //--Public Properties
+		
+		#endregion
+		
+		#region Public Properties
+		
         public int BufferSize
         {
             get { return rawBufferLength; }
@@ -69,15 +77,50 @@ namespace CSharpSynth.Synthesis
         {
             get { return bank; }
         }
-        //--Public Methods
-        public StreamSynthesizer(int sampleRate, int audioChannels, int bufferSizeInMilliseconds, int maxpoly)
+		
+		#endregion
+		
+		#region Public Methods
+		
+		public StreamSynthesizer(int sampleRate, int audioChannels, int bufferSizeInMilliseconds, int maxpoly)
         {
             this.sampleRate = sampleRate;
             this.audioChannels = audioChannels;
             this.samplesperBuffer = (int)((sampleRate / 1000.0) * bufferSizeInMilliseconds);
             this.polyphony = maxpoly;
-            setupSynth();
+            
+			/* readonly variables can be set only in constructor, so the check has to be done here */
+            if (sampleRate < 8000 || sampleRate > 48000)
+            {
+                sampleRate = 44100;
+                this.samplesperBuffer = (sampleRate / 1000) * 50;
+                DBG.error("-----> Invalid Sample Rate! Changed to---->" + sampleRate);
+                DBG.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
+            }
+            if (polyphony < 1 || polyphony > 500)
+            {
+                polyphony = 40;
+                DBG.error("-----> Invalid Max Poly! Changed to---->" + polyphony);
+            }
+            if (maxnotepoly < 1 || maxnotepoly > polyphony)
+            {
+                maxnotepoly = 2;
+                DBG.error("-----> Invalid Max Note Poly! Changed to---->" + maxnotepoly);
+            }
+            if (samplesperBuffer < 100 || samplesperBuffer > 500000)
+            {
+                this.samplesperBuffer = (int)((sampleRate / 1000.0) * 50.0);
+                DBG.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
+            }
+            if (audioChannels < 1 || audioChannels > 2)
+            {
+                audioChannels = 1;
+                DBG.error("-----> Invalid Audio Channels! Changed to---->" + audioChannels);
+            }
+						
+			setupSynth();
         }
+		
         public bool LoadBank(string filename)
         {
             try
@@ -87,11 +130,12 @@ namespace CSharpSynth.Synthesis
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Bank load error!\n" + ex.Message + "\n\n" + ex.StackTrace);
+                DBG.error("Bank load error!\n" + ex.Message + "\n\n" + ex.StackTrace);
                 return false;
             }
             return true;
         }
+		
         public bool UnloadBank(int index)
         {
             if (index < BankManager.Count)
@@ -103,6 +147,7 @@ namespace CSharpSynth.Synthesis
             }
             return false;
         }
+		
         public bool UnloadBank()
         {
             if (bank != null)
@@ -112,6 +157,7 @@ namespace CSharpSynth.Synthesis
             }
             return false;
         }
+		
         public void SwitchBank(int index)
         {
             if (index < BankManager.Count)
@@ -121,16 +167,19 @@ namespace CSharpSynth.Synthesis
                     bank.reload(this.sampleRate);
             }
         }
+		
         public void setPan(int channel, float position)
         {
             if (channel > -1 && channel < panPositions_.Length && position >= -1.00f && position <= 1.00f)
                 panPositions_[channel] = position;
         }
+		
         public void setVolume(int channel, float position)
         {
             if (channel > -1 && channel < volPositions_.Length && position >= 0.00f && position <= 1.00f)
                 volPositions_[channel] = position;
         }
+		
         public void setPitchBend(int channel, float semitones)
         {
             if (channel > -1 && channel < tunePositions_.Length && semitones >= -12.00f && semitones <= 12.00f)
@@ -138,10 +187,12 @@ namespace CSharpSynth.Synthesis
                 tunePositions_[channel] = semitones;
             }
         }
+		
         public void setSequencer(MidiSequencer sequencer)
         {
             this.seq = sequencer;
         }
+		
         public void resetSynthControls()
         {
             //Reset Pan Positions back to 0.0f
@@ -152,6 +203,7 @@ namespace CSharpSynth.Synthesis
             for (int x = 0; x < volPositions_.Length; x++)
                 volPositions_[x] = 1.00f;
         }
+		
         public void Dispose()
         {
             Stop();
@@ -162,10 +214,12 @@ namespace CSharpSynth.Synthesis
             keyRegistry.Clear();
             effects.Clear();
         }
+		
         public void Stop()
         {
             NoteOffAll(true);
         }
+		
         public void NoteOn(int channel, int note, int velocity, int program)
         {
             // Grab a free voice
@@ -204,6 +258,7 @@ namespace CSharpSynth.Synthesis
             freeVoice.Start(channel, note, velocity);
             activeVoices.AddLast(freeVoice);
         }
+		
         public void NoteOff(int channel, int note)
         {
             NoteRegistryKey r = new NoteRegistryKey((byte)channel, (byte)note);
@@ -217,6 +272,7 @@ namespace CSharpSynth.Synthesis
                 }
             }
         }
+		
         public void NoteOffAll(bool immediate)
         {
             if (keyRegistry.Keys.Count == 0 && activeVoices.Count == 0)
@@ -232,6 +288,7 @@ namespace CSharpSynth.Synthesis
             }
             keyRegistry.Clear();
         }
+		
         public void GetNext(byte[] buffer)
         {//Call this to process the next part of audio and return it in raw form.
             ClearWorkingBuffer();
@@ -242,25 +299,33 @@ namespace CSharpSynth.Synthesis
             }
             ConvertBuffer(sampleBuffer, buffer);
         }
+		
         public void AddEffect(BasicAudioEffect effect)
         {
             effects.Add(effect);
         }
+		
         public void RemoveEffect(int index)
         {
             effects.RemoveAt(index);
         }
+		
         public void ClearEffects()
         {
             effects.Clear();
         }
-        //--Private Methods
+		
+		#endregion
+        
+		#region Private Methods
+		
         private Voice getFreeVoice()
         {
             if (freeVoices.Count == 0)
                 return null;
             return freeVoices.Pop();
         }
+		
         private Voice getUsedVoice(NoteRegistryKey r)
         {
             List<Voice> voicelist;
@@ -278,6 +343,7 @@ namespace CSharpSynth.Synthesis
             }
             return null;
         }
+		
         private void ConvertBuffer(float[,] from, byte[] to)
         {
             int bytesPerSample = 2; //assume 16 bit audio
@@ -314,6 +380,7 @@ namespace CSharpSynth.Synthesis
                 }
             }
         }
+		
         private void FillWorkingBuffer()
         {
             // Call Process on all active voices
@@ -398,40 +465,14 @@ namespace CSharpSynth.Synthesis
                 }
             }
         }
+		
         private void ClearWorkingBuffer()
         {
             Array.Clear(sampleBuffer, 0, audioChannels * samplesperBuffer);
         }
+		
         private void setupSynth()
         {
-            //checks
-            if (sampleRate < 8000 || sampleRate > 48000)
-            {
-                sampleRate = 44100;
-                this.samplesperBuffer = (sampleRate / 1000) * 50;
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Sample Rate! Changed to---->" + sampleRate);
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
-            }
-            if (polyphony < 1 || polyphony > 500)
-            {
-                polyphony = 40;
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Max Poly! Changed to---->" + polyphony);
-            }
-            if (maxnotepoly < 1 || maxnotepoly > polyphony)
-            {
-                maxnotepoly = 2;
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Max Note Poly! Changed to---->" + maxnotepoly);
-            }
-            if (samplesperBuffer < 100 || samplesperBuffer > 500000)
-            {
-                this.samplesperBuffer = (int)((sampleRate / 1000.0) * 50.0);
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
-            }
-            if (audioChannels < 1 || audioChannels > 2)
-            {
-                audioChannels = 1;
-                System.Diagnostics.Debug.WriteLine("-----> Invalid Audio Channels! Changed to---->" + audioChannels);
-            }
             //initialize variables
             sampleBuffer = new float[audioChannels, samplesperBuffer];
             rawBufferLength = audioChannels * samplesperBuffer * 2; //Assuming 16 bit data
@@ -451,5 +492,8 @@ namespace CSharpSynth.Synthesis
             //create effect list
             effects = new List<BasicAudioEffect>();
         }
+		
+		#endregion
+		
     }
 }

@@ -144,6 +144,9 @@
     <Compile Include="..\..\src\StreamLoader.cs">
       <Link>StreamLoader.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\Debug.cs">
+      <Link>Debug.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\Banks\Analog\.svn\all-wcprops">
