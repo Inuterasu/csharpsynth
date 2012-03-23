@@ -29,7 +29,8 @@ namespace CSharpSynth.Wave
         public void Close()
         {
             BW.Close();
-            BW.Dispose();
+			/* There is no Dispose() available in mono project */
+            //BW.Dispose();
             BinaryWriter bw2 = new BinaryWriter(System.IO.File.OpenRead(Path.GetDirectoryName(fileN)));
             bw2.Write((Int32)1179011410);
             bw2.Write((Int32)44 + length - 8);

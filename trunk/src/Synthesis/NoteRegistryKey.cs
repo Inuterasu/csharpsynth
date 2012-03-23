@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 
 namespace CSharpSynth.Synthesis
 {
-    public struct NoteRegistryKey : IEquatable<NoteRegistryKey>
+	
+	/* Generic IEquatable is not allowed on Unity iOS platform*/
+    public struct NoteRegistryKey // : IEquatable<NoteRegistryKey>
     {
         //--Variables
         private readonly byte note;
