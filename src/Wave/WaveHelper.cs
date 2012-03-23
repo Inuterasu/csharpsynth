@@ -113,7 +113,6 @@ namespace CSharpSynth.Wave
         {
             if (fmtchk.wBitsPerSample == bitsPerSample)
                 return;
-            float change = bitsPerSample / fmtchk.wBitsPerSample;
             
             float[,] samples = GetSampleData(fmtchk, datachk);
             datachk.sampled_data = GetRawData(samples, bitsPerSample);
