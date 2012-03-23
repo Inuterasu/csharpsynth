@@ -141,6 +141,7 @@
     <Compile Include="..\..\src\Wave\DSP\SincLowPass.cs">
       <Link>Wave\DSP\SincLowPass.cs</Link>
     </Compile>
+    <Compile Include="StreamLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\Banks\Analog\.svn\all-wcprops">
