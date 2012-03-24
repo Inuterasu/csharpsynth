@@ -1,6 +1,6 @@
-#define MONODEVELOP
-#define VISUALSTUDIO
-//#define UNITY
+//#define MONODEVELOP
+//#define VISUALSTUDIO
+#define UNITY
 //#define XNA
 #define DEBUG_LEVEL_LOG
 #define DEBUG_LEVEL_WARN
