@@ -13,12 +13,16 @@ using UnityEngine;
  
 namespace CSharpSynth
 {
-	static public class StreamLoader
+	static public class PlatformHelper
 	{
 		
 #if !MONODEVELOP && !VISUALSTUDIO && !UNITY && !XNA
 		static public Stream StreamLoad(string aPath){
 			return File.Open(aPath, FileMode.Open);	
+		}
+		
+		static public bool FileExists(string aPath){
+			return File.Exists(aPath);	
 		}
 #endif
 		
@@ -26,11 +30,19 @@ namespace CSharpSynth
 		static public Stream StreamLoad(string aPath){
 			return File.Open(aPath, FileMode.Open);
 		}
+		
+		static public bool FileExists(string aPath){
+			return File.Exists(aPath);	
+		}
 #endif
 		
 #if VISUALSTUDIO
 		static public Stream StreamLoad(string aPath){
 			return File.Open(aPath, FileMode.Open);	
+		}
+		
+		static public bool FileExists(string aPath){
+			return File.Exists(aPath);	
 		}
 #endif
 
@@ -42,11 +54,19 @@ namespace CSharpSynth
 			}
 			return null;	
 		}
+		
+		static public bool FileExists(string aPath){
+			return true;	
+		}
 #endif
 		
 #if XNA
 		static public Stream StreamLoad(string aPath){
 			return File.Open(aPath, FileMode.Open);		
+		}
+		
+		static public bool FileExists(string aPath){
+			return File.Exists(aPath);	
 		}
 #endif
 		

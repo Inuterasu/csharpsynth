@@ -139,7 +139,7 @@ namespace CSharpSynth.Banks.Fm
         }       
         private void loadProgramFile(string file)
         {
-            StreamReader reader = new StreamReader(StreamLoader.StreamLoad(file));
+            StreamReader reader = new StreamReader(PlatformHelper.StreamLoad(file));
             if (!reader.ReadLine().Trim().ToUpper().Equals("[FM INSTRUMENT]"))
             {
                 reader.Close();

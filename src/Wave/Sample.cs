@@ -13,7 +13,7 @@ namespace CSharpSynth.Wave
         //--Public Methods
         public Sample(string filename)
         {
-            if (System.IO.File.Exists(filename) == false)
+            if (PlatformHelper.FileExists(filename) == false)
                 throw new System.IO.FileNotFoundException("Sample not found: " + Path.GetFileNameWithoutExtension(filename));
             name = Path.GetFileNameWithoutExtension(filename);
             WaveFileReader WaveReader = new WaveFileReader(filename);

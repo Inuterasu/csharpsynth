@@ -48,7 +48,7 @@ namespace CSharpSynth.Wave
             bw2.Write((Int16)bits);
             bw2.Write((Int32)1635017060);
             bw2.Write((Int32)length);
-            BinaryReader br = new BinaryReader(StreamLoader.StreamLoad(ftemp));
+            BinaryReader br = new BinaryReader(PlatformHelper.StreamLoad(ftemp));
             for (int x = 0; x < length; x++)
                 bw2.Write(br.ReadByte());
             br.Close();

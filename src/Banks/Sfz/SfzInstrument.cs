@@ -17,7 +17,7 @@ namespace CSharpSynth.Banks.Sfz
             : base()
         {
             this.SampleRate = sampleRate;
-            ReadFromStream(StreamLoader.StreamLoad(Instrumentfile), Path.GetDirectoryName(Instrumentfile) + "/", bank);
+            ReadFromStream(PlatformHelper.StreamLoad(Instrumentfile), Path.GetDirectoryName(Instrumentfile) + "/", bank);
             CreateKeyMap();
             base.Name = System.IO.Path.GetFileNameWithoutExtension(Instrumentfile);
         }
