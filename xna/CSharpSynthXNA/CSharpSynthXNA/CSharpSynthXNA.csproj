@@ -96,6 +96,120 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Analog\AnalogInstrument.cs">
+      <Link>Banks\Analog\AnalogInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\BankManager.cs">
+      <Link>Banks\BankManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Fm\Envelope.cs">
+      <Link>Banks\Fm\Envelope.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Fm\FMInstrument.cs">
+      <Link>Banks\Fm\FMInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Fm\IFMComponent.cs">
+      <Link>Banks\Fm\IFMComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Instrument.cs">
+      <Link>Banks\Instrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\InstrumentBank.cs">
+      <Link>Banks\InstrumentBank.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Sfz\SfzInstrument.cs">
+      <Link>Banks\Sfz\SfzInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Banks\Sfz\SfzRegion.cs">
+      <Link>Banks\Sfz\SfzRegion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Debug.cs">
+      <Link>Debug.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Effects\BasicAudioEffect.cs">
+      <Link>Effects\BasicAudioEffect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Effects\dBMeter.cs">
+      <Link>Effects\dBMeter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Effects\Echo.cs">
+      <Link>Effects\Echo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Effects\SincFilter.cs">
+      <Link>Effects\SincFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Midi\MidiEvent.cs">
+      <Link>Midi\MidiEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Midi\MidiFile.cs">
+      <Link>Midi\MidiFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Midi\MidiHeader.cs">
+      <Link>Midi\MidiHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Midi\MidiHelper.cs">
+      <Link>Midi\MidiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Midi\MidiTrack.cs">
+      <Link>Midi\MidiTrack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Sequencer\MidiSequencer.cs">
+      <Link>Sequencer\MidiSequencer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Sequencer\MidiSequencerEvent.cs">
+      <Link>Sequencer\MidiSequencerEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\StreamLoader.cs">
+      <Link>StreamLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Synthesis\NoteRegistryKey.cs">
+      <Link>Synthesis\NoteRegistryKey.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Synthesis\StreamSynthesizer.cs">
+      <Link>Synthesis\StreamSynthesizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Synthesis\SynthHelper.cs">
+      <Link>Synthesis\SynthHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Synthesis\Voice.cs">
+      <Link>Synthesis\Voice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\DataChunk.cs">
+      <Link>Wave\DataChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\DSP\BiQuadLowPass.cs">
+      <Link>Wave\DSP\BiQuadLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\DSP\SincLowPass.cs">
+      <Link>Wave\DSP\SincLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\FactChunk.cs">
+      <Link>Wave\FactChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\FormatChunk.cs">
+      <Link>Wave\FormatChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\IChunk.cs">
+      <Link>Wave\IChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\MasterChunk.cs">
+      <Link>Wave\MasterChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\Sample.cs">
+      <Link>Wave\Sample.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\WaveFile.cs">
+      <Link>Wave\WaveFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\WaveFileReader.cs">
+      <Link>Wave\WaveFileReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\WaveFileWriter.cs">
+      <Link>Wave\WaveFileWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Documents\Visual Studio 2010\Projects\CSharpSynthVS\src\Wave\WaveHelper.cs">
+      <Link>Wave\WaveHelper.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
