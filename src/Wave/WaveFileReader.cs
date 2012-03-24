@@ -13,7 +13,7 @@ namespace CSharpSynth.Wave
         {
             if (Path.GetExtension(filename).ToLower() != ".wav" || File.Exists(filename) == false)
                 throw new IOException("Invalid wave file!");
-            BR = new System.IO.BinaryReader(System.IO.File.OpenRead(filename));
+            BR = new System.IO.BinaryReader(StreamLoader.StreamLoad(filename));
         }
         public IChunk[] ReadAllChunks()
         {

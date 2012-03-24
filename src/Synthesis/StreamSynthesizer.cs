@@ -82,11 +82,11 @@ namespace CSharpSynth.Synthesis
 		
 		#region Public Methods
 		
-		public StreamSynthesizer(int sampleRate, int audioChannels, int bufferSizeInMilliseconds, int maxpoly)
+		public StreamSynthesizer(int sampleRate, int audioChannels, int samplesperBuffer, int maxpoly, bool bufferInMilliseconds = true)
         {
-            this.sampleRate = sampleRate;
+			this.sampleRate = sampleRate;
             this.audioChannels = audioChannels;
-            this.samplesperBuffer = (int)((sampleRate / 1000.0) * bufferSizeInMilliseconds);
+            this.samplesperBuffer = bufferInMilliseconds ? (int)((sampleRate / 1000.0) * samplesperBuffer) :samplesperBuffer;
             this.polyphony = maxpoly;
             
 			/* readonly variables can be set only in constructor, so the check has to be done here */
@@ -119,8 +119,8 @@ namespace CSharpSynth.Synthesis
             }
 						
 			setupSynth();
-        }
-		
+		}
+				
         public bool LoadBank(string filename)
         {
             try
