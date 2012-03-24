@@ -24,25 +24,29 @@ namespace CSharpSynth
 		
 #if MONODEVELOP
 		static public Stream StreamLoaderDelegate(string aPath){
-			return null;	
+			return File.Open(aPath, FileMode.Open);
 		}
 #endif
 		
 #if VISUALSTUDIO
 		static public Stream StreamLoaderDelegate(string aPath){
-			return null;	
+			return File.Open(aPath, FileMode.Open);	
 		}
 #endif
 
 #if UNITY
 		static public Stream StreamLoaderDelegate(string aPath){
+			TextAsset ta = Resources.Load(aPath, typeof(TextAsset)) as TextAsset;
+			if(ta != null){
+				return new MemoryStream(ta.bytes);	
+			}
 			return null;	
 		}
 #endif
 		
 #if XNA
 		static public Stream StreamLoaderDelegate(string aPath){
-			return null;	
+			return File.Open(aPath, FileMode.Open);		
 		}
 #endif
 		

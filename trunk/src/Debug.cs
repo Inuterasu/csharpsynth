@@ -1,4 +1,4 @@
-//#define MONODEVELOP
+#define MONODEVELOP
 #define VISUALSTUDIO
 //#define UNITY
 //#define XNA
@@ -145,12 +145,6 @@ namespace CSharpSynth
 				Debug.Break();
 		}
 	}
-#endif
-		
-#if XNA
-		static public Stream StreamLoaderDelegate(string aPath){
-			return null;	
-		}
 #endif
 		
 	}
