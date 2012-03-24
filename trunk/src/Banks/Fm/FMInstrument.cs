@@ -143,13 +143,13 @@ namespace CSharpSynth.Banks.Fm
             if (!reader.ReadLine().Trim().ToUpper().Equals("[FM INSTRUMENT]"))
             {
                 reader.Close();
-                throw new InvalidDataException("Invalid Program file: Incorrect Header!");
+                throw new Exception("Invalid Program file: Incorrect Header!");
             }
             string[] args = reader.ReadLine().Split(new string[] { "|" }, StringSplitOptions.None);
             if (args.Length < 4)
             {
                 reader.Close();
-                throw new InvalidDataException("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing");
             }
             this.baseWaveType = SynthHelper.getTypeFromString(args[0]);
             this.modWaveType = SynthHelper.getTypeFromString(args[1]);
@@ -159,7 +159,7 @@ namespace CSharpSynth.Banks.Fm
             if (args.Length < 3)
             {
                 reader.Close();
-                throw new InvalidDataException("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing");
             }
             if (int.Parse(args[0]) == 0)
                 looping = true;
@@ -169,7 +169,7 @@ namespace CSharpSynth.Banks.Fm
             if (args.Length < 3)
             {
                 reader.Close();
-                throw new InvalidDataException("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing");
             }
             switch (args[0].ToLower().Trim())
             {

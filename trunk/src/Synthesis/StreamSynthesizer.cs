@@ -305,8 +305,19 @@ namespace CSharpSynth.Synthesis
                 node = node.Next;
             }
         }
-
-        public void GetNext(byte[] buffer)
+       		
+		public void GetNext(byte[] buffer)
+        {//Call this to process the next part of audio and return it in raw form.
+            ClearWorkingBuffer();
+            FillWorkingBuffer();
+            for (int x = 0; x < effects.Count; x++)
+            {
+                effects[x].doEffect(sampleBuffer);
+            }
+            ConvertBuffer(sampleBuffer, buffer);
+        }
+		
+		public void GetNext(float[] buffer)
         {//Call this to process the next part of audio and return it in raw form.
             ClearWorkingBuffer();
             FillWorkingBuffer();
@@ -394,6 +405,31 @@ namespace CSharpSynth.Synthesis
                         to[index] = (byte)shortSample;
                         to[index + 1] = (byte)(shortSample >> 8);
                     }
+                }
+            }
+        }
+		
+		private void ConvertBuffer(float[,] from, float[] to)
+        {
+            const int bytesPerSample = 2; //again we assume 16 bit audio
+            int channels = from.GetLength(0);
+            int bufferSize = from.GetLength(1);
+            // Make sure the buffer sizes are correct
+            System.Diagnostics.Debug.Assert(to.Length == bufferSize * channels * bytesPerSample, "Buffer sizes are mismatched.");
+            						
+			int k = 0;
+			for (int i = 0; i < bufferSize; i++)
+            {
+                for (int c = 0; c < channels; c++)
+                {
+                    // Apply master volume
+                    float floatSample = from[c, i] * MainVolume;
+
+                    // Clamp the value to the [-1.0..1.0] range
+                    //floatSample = SynthHelper.Clamp(floatSample, -1.0f, 1.0f);
+
+             		to[k] = floatSample;
+					k++;
                 }
             }
         }
