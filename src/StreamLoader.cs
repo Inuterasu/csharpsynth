@@ -1,4 +1,4 @@
-#define MONODEVELOP
+//#define MONODEVELOP
 //#define VISUALSTUDIO
 //#define UNITY
 //#define XNA
@@ -18,7 +18,7 @@ namespace CSharpSynth
 		
 #if !MONODEVELOP && !VISUALSTUDIO && !UNITY && !XNA
 		static public Stream StreamLoad(string aPath){
-			return null;	
+			return File.Open(aPath, FileMode.Open);	
 		}
 #endif
 		
