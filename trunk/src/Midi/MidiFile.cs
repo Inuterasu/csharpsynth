@@ -51,7 +51,7 @@ namespace CSharpSynth.Midi
             Stream midiStream = null;
             try
             {
-                midiStream = File.Open(filename, FileMode.Open);
+                midiStream = StreamLoader.StreamLoad(filename);
                 loadStream(midiStream);
             }
             catch (Exception ex)
@@ -178,7 +178,7 @@ namespace CSharpSynth.Midi
         //--Static Methods
         public static bool isValidMidiFile(string filename)
         {
-            Stream stream = File.Open(filename, FileMode.Open);
+            Stream stream = StreamLoader.StreamLoad(filename);
             byte[] head = new byte[4];
             stream.Read(head, 0, 4);
             stream.Close();

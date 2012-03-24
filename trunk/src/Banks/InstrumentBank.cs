@@ -47,7 +47,7 @@ namespace CSharpSynth.Banks
                 Bank.Add(null);
             for (int x = 0; x < BankManager.DEFAULT_DRUMBANK_SIZE; x++)
                 DrumBank.Add(null);
-            loadStream(File.Open(lastbankpath, FileMode.Open), Path.GetDirectoryName(lastbankpath) + "\\", Programs, DrumPrograms);
+            loadStream(StreamLoader.StreamLoad(lastbankpath), Path.GetDirectoryName(lastbankpath) + "/", Programs, DrumPrograms);
         }
         public void loadStream(Stream bankStream, string directory, byte[] Programs, byte[] DrumPrograms)
         {
