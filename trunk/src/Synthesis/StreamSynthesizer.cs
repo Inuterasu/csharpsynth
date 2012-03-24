@@ -82,11 +82,12 @@ namespace CSharpSynth.Synthesis
 		
 		#region Public Methods
 		
-		public StreamSynthesizer(int sampleRate, int audioChannels, int samplesperBuffer, int maxpoly, bool bufferInMilliseconds = true)
+		/* You can pass ssmplesperBuffer as milliseconds or as samplesperBuffer, default is in millisecodns */
+		public StreamSynthesizer(int sampleRate, int audioChannels, int samplesInMillisecondsOrSamplesPerBuffer, int maxpoly, bool bufferInMilliseconds = true)
         {
 			this.sampleRate = sampleRate;
             this.audioChannels = audioChannels;
-            this.samplesperBuffer = bufferInMilliseconds ? (int)((sampleRate / 1000.0) * samplesperBuffer) :samplesperBuffer;
+            this.samplesperBuffer = bufferInMilliseconds ? (int)((sampleRate / 1000.0) * samplesInMillisecondsOrSamplesPerBuffer) : samplesInMillisecondsOrSamplesPerBuffer;
             this.polyphony = maxpoly;
             
 			/* readonly variables can be set only in constructor, so the check has to be done here */
