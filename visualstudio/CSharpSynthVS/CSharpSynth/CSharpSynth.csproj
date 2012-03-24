@@ -67,9 +67,6 @@
     <Compile Include="..\..\..\src\Banks\Sfz\SfzRegion.cs">
       <Link>Banks\Sfz\SfzRegion.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Debug.cs">
-      <Link>Debug.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Effects\BasicAudioEffect.cs">
       <Link>Effects\BasicAudioEffect.cs</Link>
     </Compile>
@@ -97,14 +94,17 @@
     <Compile Include="..\..\..\src\Midi\MidiTrack.cs">
       <Link>Midi\MidiTrack.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\PlatformDebug.cs">
+      <Link>PlatformDebug.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Sequencer\MidiSequencer.cs">
       <Link>Sequencer\MidiSequencer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Sequencer\MidiSequencerEvent.cs">
       <Link>Sequencer\MidiSequencerEvent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\StreamLoader.cs">
-      <Link>StreamLoader.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Synthesis\NoteRegistryKey.cs">
       <Link>Synthesis\NoteRegistryKey.cs</Link>
