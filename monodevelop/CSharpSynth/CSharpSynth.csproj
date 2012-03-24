@@ -141,11 +141,11 @@
     <Compile Include="..\..\src\Wave\DSP\SincLowPass.cs">
       <Link>Wave\DSP\SincLowPass.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\Debug.cs">
-      <Link>Debug.cs</Link>
-    </Compile>
     <Compile Include="..\..\src\PlatformHelper.cs">
       <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\PlatformDebug.cs">
+      <Link>PlatformDebug.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
