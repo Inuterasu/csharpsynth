@@ -113,7 +113,7 @@ namespace CSharpSynth.Sequencer
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error Loading Midi:\n" + ex.Message);
+                    DBG.error("Error Loading Midi:\n" + ex.Message);
                     return false;
                 }
             }
@@ -122,7 +122,7 @@ namespace CSharpSynth.Sequencer
             {
                 if (synth.SoundBank == null)
                 {//If there is no bank warn the developer =)
-                    System.Diagnostics.Debug.WriteLine("No Soundbank loaded !");
+                    DBG.error("No Soundbank loaded !");
                 }
                 else
                 {
@@ -147,7 +147,7 @@ namespace CSharpSynth.Sequencer
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Error Loading Midi:\n" + ex.Message);
+                DBG.error("Error Loading Midi:\n" + ex.Message);
                 return false;
             }
             return LoadMidi(mf, UnloadUnusedInstruments);
