@@ -33,136 +33,6 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="..\..\src\Banks\BankManager.cs">
-      <Link>Banks\BankManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Instrument.cs">
-      <Link>Banks\Instrument.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\InstrumentBank.cs">
-      <Link>Banks\InstrumentBank.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Analog\AnalogInstrument.cs">
-      <Link>Banks\Analog\AnalogInstrument.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Fm\Envelope.cs">
-      <Link>Banks\Fm\Envelope.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Fm\FMInstrument.cs">
-      <Link>Banks\Fm\FMInstrument.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Fm\IFMComponent.cs">
-      <Link>Banks\Fm\IFMComponent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Sfz\SfzInstrument.cs">
-      <Link>Banks\Sfz\SfzInstrument.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Banks\Sfz\SfzRegion.cs">
-      <Link>Banks\Sfz\SfzRegion.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Effects\BasicAudioEffect.cs">
-      <Link>Effects\BasicAudioEffect.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Effects\Echo.cs">
-      <Link>Effects\Echo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Effects\SincFilter.cs">
-      <Link>Effects\SincFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Effects\dBMeter.cs">
-      <Link>Effects\dBMeter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Midi\MidiEvent.cs">
-      <Link>Midi\MidiEvent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Midi\MidiFile.cs">
-      <Link>Midi\MidiFile.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Midi\MidiHeader.cs">
-      <Link>Midi\MidiHeader.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Midi\MidiHelper.cs">
-      <Link>Midi\MidiHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Midi\MidiTrack.cs">
-      <Link>Midi\MidiTrack.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Sequencer\MidiSequencer.cs">
-      <Link>Sequencer\MidiSequencer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Sequencer\MidiSequencerEvent.cs">
-      <Link>Sequencer\MidiSequencerEvent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Synthesis\NoteRegistryKey.cs">
-      <Link>Synthesis\NoteRegistryKey.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Synthesis\StreamSynthesizer.cs">
-      <Link>Synthesis\StreamSynthesizer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Synthesis\SynthHelper.cs">
-      <Link>Synthesis\SynthHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Synthesis\Voice.cs">
-      <Link>Synthesis\Voice.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\DataChunk.cs">
-      <Link>Wave\DataChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\FactChunk.cs">
-      <Link>Wave\FactChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\FormatChunk.cs">
-      <Link>Wave\FormatChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\IChunk.cs">
-      <Link>Wave\IChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\MasterChunk.cs">
-      <Link>Wave\MasterChunk.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\Sample.cs">
-      <Link>Wave\Sample.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\WaveFile.cs">
-      <Link>Wave\WaveFile.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\WaveFileReader.cs">
-      <Link>Wave\WaveFileReader.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\WaveFileWriter.cs">
-      <Link>Wave\WaveFileWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\WaveHelper.cs">
-      <Link>Wave\WaveHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\DSP\BiQuadLowPass.cs">
-      <Link>Wave\DSP\BiQuadLowPass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\Wave\DSP\SincLowPass.cs">
-      <Link>Wave\DSP\SincLowPass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\PlatformHelper.cs">
-      <Link>PlatformHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\PlatformDebug.cs">
-      <Link>PlatformDebug.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\src\Banks\Analog\.svn\all-wcprops">
-      <Link>Banks\Analog\.svn\all-wcprops</Link>
-    </None>
-    <None Include="..\..\src\Banks\Analog\.svn\entries">
-      <Link>Banks\Analog\.svn\entries</Link>
-    </None>
-    <None Include="..\..\src\Banks\Analog\.svn\prop-base\AnalogInstrument.cs.svn-base">
-      <Link>Banks\Analog\.svn\prop-base\AnalogInstrument.cs.svn-base</Link>
-    </None>
-    <None Include="..\..\src\Banks\Analog\.svn\text-base\AnalogInstrument.cs.svn-base">
-      <Link>Banks\Analog\.svn\text-base\AnalogInstrument.cs.svn-base</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
@@ -171,5 +41,121 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dlls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\CSharpSynth\PlatformDebug.cs">
+      <Link>CSharpSynth\PlatformDebug.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\PlatformHelper.cs">
+      <Link>CSharpSynth\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\BankManager.cs">
+      <Link>CSharpSynth\Banks\BankManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Instrument.cs">
+      <Link>CSharpSynth\Banks\Instrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\InstrumentBank.cs">
+      <Link>CSharpSynth\Banks\InstrumentBank.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Analog\AnalogInstrument.cs">
+      <Link>CSharpSynth\Banks\Analog\AnalogInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Fm\Envelope.cs">
+      <Link>CSharpSynth\Banks\Fm\Envelope.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Fm\FMInstrument.cs">
+      <Link>CSharpSynth\Banks\Fm\FMInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Fm\IFMComponent.cs">
+      <Link>CSharpSynth\Banks\Fm\IFMComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Sfz\SfzInstrument.cs">
+      <Link>CSharpSynth\Banks\Sfz\SfzInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Banks\Sfz\SfzRegion.cs">
+      <Link>CSharpSynth\Banks\Sfz\SfzRegion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Effects\BasicAudioEffect.cs">
+      <Link>CSharpSynth\Effects\BasicAudioEffect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Effects\Echo.cs">
+      <Link>CSharpSynth\Effects\Echo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Effects\SincFilter.cs">
+      <Link>CSharpSynth\Effects\SincFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Effects\dBMeter.cs">
+      <Link>CSharpSynth\Effects\dBMeter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Midi\MidiEvent.cs">
+      <Link>CSharpSynth\Midi\MidiEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Midi\MidiFile.cs">
+      <Link>CSharpSynth\Midi\MidiFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Midi\MidiHeader.cs">
+      <Link>CSharpSynth\Midi\MidiHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Midi\MidiHelper.cs">
+      <Link>CSharpSynth\Midi\MidiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Midi\MidiTrack.cs">
+      <Link>CSharpSynth\Midi\MidiTrack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Sequencer\MidiSequencer.cs">
+      <Link>CSharpSynth\Sequencer\MidiSequencer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Sequencer\MidiSequencerEvent.cs">
+      <Link>CSharpSynth\Sequencer\MidiSequencerEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\NoteRegistryKey.cs">
+      <Link>CSharpSynth\Synthesis\NoteRegistryKey.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.cs">
+      <Link>CSharpSynth\Synthesis\StreamSynthesizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\SynthHelper.cs">
+      <Link>CSharpSynth\Synthesis\SynthHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\Voice.cs">
+      <Link>CSharpSynth\Synthesis\Voice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\DataChunk.cs">
+      <Link>CSharpSynth\Wave\DataChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\FactChunk.cs">
+      <Link>CSharpSynth\Wave\FactChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\FormatChunk.cs">
+      <Link>CSharpSynth\Wave\FormatChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\IChunk.cs">
+      <Link>CSharpSynth\Wave\IChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\MasterChunk.cs">
+      <Link>CSharpSynth\Wave\MasterChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\Sample.cs">
+      <Link>CSharpSynth\Wave\Sample.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\WaveFile.cs">
+      <Link>CSharpSynth\Wave\WaveFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\WaveFileReader.cs">
+      <Link>CSharpSynth\Wave\WaveFileReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\WaveFileWriter.cs">
+      <Link>CSharpSynth\Wave\WaveFileWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\WaveHelper.cs">
+      <Link>CSharpSynth\Wave\WaveHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\DSP\BiQuadLowPass.cs">
+      <Link>CSharpSynth\Wave\DSP\BiQuadLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\DSP\SincLowPass.cs">
+      <Link>CSharpSynth\Wave\DSP\SincLowPass.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
