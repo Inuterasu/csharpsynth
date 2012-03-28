@@ -1,17 +1,20 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../src/Synthesis/StreamSynthesizer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../src/CSharpSynth/Synthesis/Voice.cs">
     <Files>
-      <File FileName="../src/Synthesis/StreamSynthesizer.cs" Line="459" Column="63" />
-      <File FileName="../src/PlatformHelper.cs" Line="1" Column="1" />
-      <File FileName="../src/PlatformDebug.cs" Line="1" Column="1" />
+      <File FileName="../src/CSharpSynth/PlatformDebug.cs" Line="1" Column="1" />
+      <File FileName="../src/CSharpSynth/PlatformHelper.cs" Line="1" Column="1" />
+      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.cs" Line="457" Column="204" />
+      <File FileName="../src/CSharpSynth/Synthesis/Voice.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="CSharpSynth" expanded="True">
-            <Node name="Synthesis" expanded="True">
-              <Node name="StreamSynthesizer.cs" selected="True" />
+            <Node name="CSharpSynth" expanded="True">
+              <Node name="Synthesis" expanded="True">
+                <Node name="Voice.cs" selected="True" />
+              </Node>
             </Node>
           </Node>
           <Node name="CSharpSynthTest" expanded="True" />

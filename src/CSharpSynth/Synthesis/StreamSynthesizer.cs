@@ -454,8 +454,7 @@ namespace CSharpSynth.Synthesis
                         node = activeVoices.First;
                         while (node != null)
                         {
-                            if (oldtime < 0 || waitTime < 0)
-                                throw new Exception("dd");
+                            if (oldtime < 0 || waitTime < 0) return; //throw new Exception("dd"); we can not afford to throw unknown exception into unity engine otherwise our packages won't be submitted.
                             node.Value.Process(sampleBuffer, oldtime, oldtime + waitTime);
                             if (node.Value.isInUse == false)
                             {
