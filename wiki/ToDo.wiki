@@ -1,0 +1,13 @@
+StreamSynthesizer.cs
+
+Implementation of ShortMessage(byte Command, byte Data1, byte Data2) so that also other devices and sequencers can use standard midi communication protocol
+
+MidiSequencer.cs
+
+Alex, your sequencer is really nice. Good work. But we need to separate sequencer from synth in order to make it more flexible and usable for others outputs. So sequencer should call a delegate ShortMessage(Command, Data1, Data2) so that developer can decide where these midi messages goes(either  into synth.ShortMessage() or to other destinations. In that way we can stick to a standard and not making that tight bondage as you have it now, but loose one. 
+
+NAudio
+
+They have already written SF2 loader. There is likely no need for us to rewrite it again, so I would recommend to use theirs if the license will allow us. And the energy we save invest into better sounds synthesis and performance improvements.
+
+Any other ideas?
