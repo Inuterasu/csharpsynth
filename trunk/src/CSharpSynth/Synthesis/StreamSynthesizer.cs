@@ -220,6 +220,10 @@ namespace CSharpSynth.Synthesis
         {
             NoteOffAll(true);
         }
+		//here all the parsing login needed for synth to play its sounds//
+		public void ShortMessage(byte Command, byte Data1, byte Data2){
+			
+		}
 		
         public void NoteOn(int channel, int note, int velocity, int program)
         {
