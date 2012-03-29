@@ -16,7 +16,7 @@ struct MidiShortMessage{
 
 Alex I hope that you see the point, that all(I mean all short messages) the parsing of MidiEvents that you do in load stream and in ProccesMidiEvent should be done on the side of Synthesizer in ShortMessage() function and not in the sequencer. Only that way can also other midi message generators and devices really use your synth class, otherwise it is just for your sequencer and for NoteOn and NoteOff sending. Sure the helper function in synth class like mentioned NoteOn, NoteOff can be there to facilitate developers their work, but when it comes to a real standard, right now we are not able easily receiving midi message from other devices or sequencers.  
 
-When I think of it. synth.ShortMessage() should not even use MidiEvent class, and try to parse everything from bytes in order to avoid GC to do its work or at lease use only value types in the midi message parsing process. Do you see the point?
+When I think of it. synth.ShortMessage() should not even use MidiEvent class, and instead try to parse everything from bytes in order to avoid GC to do its work or at lease use only value types in the midi message parsing process. Do you see the point?
 
 NAudio
 
