@@ -161,7 +161,7 @@
     <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.MidiServer.cs">
       <Link>CSharpSynth\Synthesis\StreamSynthesizer.MidiServer.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.Control.cs">
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.MidiControl.cs">
       <Link>CSharpSynth\Synthesis\StreamSynthesizer.MidiControl.cs</Link>
     </Compile>
   </ItemGroup>

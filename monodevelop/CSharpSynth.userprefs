@@ -9,8 +9,7 @@
       <File FileName="../src/CSharpSynth/Sequencer/MidiSequencer.cs" Line="146" Column="31" />
       <File FileName="../src/CSharpSynth/Midi/MidiEvent.cs" Line="3" Column="18" />
       <File FileName="../src/CSharpSynth/Midi/MidiFile.cs" Line="8" Column="18" />
-      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.MidiServer.cs" Line="31" Column="2" />
-      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.Control.cs" Line="11" Column="29" />
+      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.MidiServer.cs" Line="25" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,9 +18,7 @@
             <Node name="CSharpSynth" expanded="True">
               <Node name="Midi" expanded="True" />
               <Node name="Sequencer" expanded="True" />
-              <Node name="Synthesis" expanded="True">
-                <Node name="StreamSynthesizer.MidiServer.cs" selected="True" />
-              </Node>
+              <Node name="Synthesis" expanded="True" selected="True" />
             </Node>
           </Node>
           <Node name="CSharpSynthTest" expanded="True" />
