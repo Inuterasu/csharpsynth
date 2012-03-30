@@ -11,10 +11,12 @@ namespace CSharpSynth.Synthesis
         public const float DEFAULT_HOLD = .01f;              //controls how long sustain is held after noteOff.
         public const int DEFAULT_SAMPLERATE = 44100;
         public const double STARTING_FREQUENCY = 8.1757989156;
+        public const double DOUBLE_PI = Math.PI * 2.0;
         public const float DEFAULT_AMPLITUDE = .25f;
         public enum WaveFormType { None = -1, Sine = 0, Sawtooth = 1, Square = 2, Triangle = 3, WhiteNoise = 4 }
         //--Private Static
         private static Random rnd = new Random();
+        private static String[] noteString = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
         //--Public Static Methods
         public static double getRandom()
         {
@@ -47,7 +49,7 @@ namespace CSharpSynth.Synthesis
         //--WaveForm Methods
         public static float Sine(double frequency, double time)
         {
-            return (float)Math.Sin(frequency * time * 2.0 * Math.PI);
+            return (float)Math.Sin(frequency * time * DOUBLE_PI);
         }
         public static float Square(double frequency, double time)
         {
@@ -71,12 +73,10 @@ namespace CSharpSynth.Synthesis
         }
         public static string NoteToString(int note)
         {
-            String[] noteString = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             return noteString[note % 12] + ((note / 12) - 1);
         }
         public static int StringToNote(string note)
         {
-            String[] noteString = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
             string noteLetter;
             int value;
             note = note.ToUpper();
