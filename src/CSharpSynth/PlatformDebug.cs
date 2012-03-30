@@ -21,7 +21,7 @@ namespace CSharpSynth
 	public static class DBG
 	{
 	
-#if VISUALSTUDIO || MONODEVELP
+#if VISUALSTUDIO || MONODEVELP || XNA
 	[System.Diagnostics.Conditional( "DEBUG_LEVEL_LOG" )]
 	[System.Diagnostics.Conditional( "DEBUG_LEVEL_WARN" )]
 	[System.Diagnostics.Conditional( "DEBUG_LEVEL_ERROR" )]
@@ -59,7 +59,7 @@ namespace CSharpSynth
 	[System.Diagnostics.Conditional( "DEBUG_LEVEL_LOG" )]
 	public static void assert( bool condition )
 	{
-		//assert( condition, string.Empty, true );
+        System.Diagnostics.Debug.Assert(condition);
 	}
 
 	
@@ -67,7 +67,7 @@ namespace CSharpSynth
 	[System.Diagnostics.Conditional( "DEBUG_LEVEL_LOG" )]
 	public static void assert( bool condition, string assertString )
 	{
-		//assert( condition, assertString, false );
+        System.Diagnostics.Debug.Assert(condition, assertString);
 	}
 
 	
