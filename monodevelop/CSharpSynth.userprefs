@@ -1,14 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../src/CSharpSynth/Synthesis/StreamSynthesizer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../src/CSharpSynth/PlatformHelper.cs">
     <Files>
       <File FileName="../src/CSharpSynth/PlatformDebug.cs" Line="1" Column="1" />
       <File FileName="../src/CSharpSynth/PlatformHelper.cs" Line="1" Column="1" />
-      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.cs" Line="178" Column="53" />
+      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.cs" Line="250" Column="13" />
       <File FileName="../src/CSharpSynth/Synthesis/Voice.cs" Line="1" Column="1" />
       <File FileName="../src/CSharpSynth/Sequencer/MidiSequencer.cs" Line="146" Column="31" />
       <File FileName="../src/CSharpSynth/Midi/MidiEvent.cs" Line="3" Column="18" />
       <File FileName="../src/CSharpSynth/Midi/MidiFile.cs" Line="8" Column="18" />
+      <File FileName="../src/CSharpSynth/Synthesis/StreamSynthesizer.MidiServer.cs" Line="24" Column="15" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,9 +17,9 @@
           <Node name="CSharpSynth" expanded="True">
             <Node name="CSharpSynth" expanded="True">
               <Node name="Midi" expanded="True" />
-              <Node name="Synthesis" expanded="True">
-                <Node name="StreamSynthesizer.cs" selected="True" />
-              </Node>
+              <Node name="Sequencer" expanded="True" />
+              <Node name="Synthesis" expanded="True" />
+              <Node name="PlatformHelper.cs" selected="True" />
             </Node>
           </Node>
           <Node name="CSharpSynthTest" expanded="True" />

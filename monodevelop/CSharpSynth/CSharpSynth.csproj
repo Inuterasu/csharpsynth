@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <DefineConstants>UNITY</DefineConstants>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -156,6 +157,12 @@
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\Wave\DSP\SincLowPass.cs">
       <Link>CSharpSynth\Wave\DSP\SincLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.MidiServer.cs">
+      <Link>CSharpSynth\Synthesis\StreamSynthesizer.MidiServer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.Control.cs">
+      <Link>CSharpSynth\Synthesis\StreamSynthesizer.MidiControl.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>
