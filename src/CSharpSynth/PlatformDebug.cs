@@ -1,7 +1,9 @@
+//Set this in CompileSymbols in project properties 
 //#define MONODEVELOP
 //#define VISUALSTUDIO
-#define UNITY
+//#define UNITY
 //#define XNA
+
 #define DEBUG_LEVEL_LOG
 #define DEBUG_LEVEL_WARN
 #define DEBUG_LEVEL_ERROR

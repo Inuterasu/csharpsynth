@@ -211,7 +211,7 @@ namespace CSharpSynth.Sequencer
             for (int x = 0; x < synth.VolPositions.Length; x++)
                 synth.VolPositions[x] = 1.00f;
         }
-        public MidiSequencerEvent Process(int frame)
+        public MidiSequencerEvent ProcessFrame(int frame)
         {
             seqEvt.Events.Clear();
             //stop or loop

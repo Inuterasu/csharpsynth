@@ -20,8 +20,8 @@ namespace CSharpSynth.Banks.Fm
         private bool looping;
         private Envelope env;
         //modulator parameters
-        private IFMComponent mamp;
-        private IFMComponent mfreq;
+        private ModulatorAmplitudeFunction mamp;
+        private ModulatorFrequencyFunction mfreq;
         //--Public Properties
         public int Attack
         {
@@ -51,7 +51,7 @@ namespace CSharpSynth.Banks.Fm
             //open fm program file
             loadProgramFile(fmProgramFile);
             //set base attribute name
-            base.Name = System.IO.Path.GetFileNameWithoutExtension(fmProgramFile);
+            base.Name = Path.GetFileNameWithoutExtension(fmProgramFile);
         }        
         public override bool allSamplesSupportDualChannel()
         {
@@ -88,55 +88,69 @@ namespace CSharpSynth.Banks.Fm
         public override float getSampleAtTime(int note, int channel, int synthSampleRate, ref double time)
         {
             //time
-            if (time > end_time)
+            if (time >= end_time)
             {
                 if (looping)
-                    time = start_time;
+                    time = time % start_time;
                 else
                 {
                     time = end_time;
                     return 0.0f;
                 }
             }
+
             double freq = SynthHelper.NoteToFrequency(note);
+
+            double timeM = time;
+            double timeC = time;
+            double delta = (1.0 / freq); //Position in wave form in 2PI * (time* frequency)
+            timeM = time % delta;
+
+            double c1 = mfreq.inputSelect == 0 ? freq : SynthHelper.DEFAULT_AMPLITUDE;
+            double c2 = mfreq.inputSelect == 1 ? SynthHelper.DEFAULT_AMPLITUDE : freq; 
+
             //modulation
             switch (modWaveType)
             {
                 case SynthHelper.WaveFormType.Sine:
-                    freq = freq + (SynthHelper.Sine(mfreq.doProcess(freq), time) * mamp.doProcess(SynthHelper.DEFAULT_AMPLITUDE));
+                    freq += (SynthHelper.Sine(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
                     break;
                 case SynthHelper.WaveFormType.Sawtooth:
-                    freq = freq + (SynthHelper.Sawtooth(mfreq.doProcess(freq), time) * mamp.doProcess(SynthHelper.DEFAULT_AMPLITUDE));
+                    freq += (SynthHelper.Sawtooth(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
                     break;
                 case SynthHelper.WaveFormType.Square:
-                    freq = freq + (SynthHelper.Square(mfreq.doProcess(freq), time) * mamp.doProcess(SynthHelper.DEFAULT_AMPLITUDE));
+                    freq += (SynthHelper.Square(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
                     break;
                 case SynthHelper.WaveFormType.Triangle:
-                    freq = freq + (SynthHelper.Triangle(mfreq.doProcess(freq), time) * mamp.doProcess(SynthHelper.DEFAULT_AMPLITUDE));
+                    freq += (SynthHelper.Triangle(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
                     break;
                 case SynthHelper.WaveFormType.WhiteNoise:
-                    freq = freq + (SynthHelper.WhiteNoise(0, time) * mamp.doProcess(SynthHelper.DEFAULT_AMPLITUDE));
+                    freq += (SynthHelper.WhiteNoise(0, timeC) * mamp.doProcess(c2));
                     break;
                 default:
                     break;
             }
+
+            delta = (1.0 / freq);      //Position in wave form in 2PI * (time* frequency)
+            timeC = time % delta;
+
             //carrier
             switch (baseWaveType)
             {
                 case SynthHelper.WaveFormType.Sine:
-                    return SynthHelper.Sine(freq, time) * env.doProcess(time);
+                    return SynthHelper.Sine(freq, timeM) * env.doProcess(time);
                 case SynthHelper.WaveFormType.Sawtooth:
-                    return SynthHelper.Sawtooth(freq, time) * env.doProcess(time);
+                    return SynthHelper.Sawtooth(freq, timeM) * env.doProcess(time);
                 case SynthHelper.WaveFormType.Square:
-                    return SynthHelper.Square(freq, time) * env.doProcess(time);
+                    return SynthHelper.Square(freq, timeM) * env.doProcess(time);
                 case SynthHelper.WaveFormType.Triangle:
-                    return SynthHelper.Triangle(freq, time) * env.doProcess(time);
+                    return SynthHelper.Triangle(freq, timeM) * env.doProcess(time);
                 case SynthHelper.WaveFormType.WhiteNoise:
-                    return SynthHelper.WhiteNoise(note, time) * env.doProcess(time);
+                    return SynthHelper.WhiteNoise(note, timeM) * env.doProcess(time);
                 default:
                     return 0.0f;
             }
-        }       
+        }
         private void loadProgramFile(string file)
         {
             StreamReader reader = new StreamReader(PlatformHelper.StreamLoad(file));
@@ -153,8 +167,8 @@ namespace CSharpSynth.Banks.Fm
             }
             this.baseWaveType = SynthHelper.getTypeFromString(args[0]);
             this.modWaveType = SynthHelper.getTypeFromString(args[1]);
-            this.mfreq = getOpsAndValues(args[2], true);
-            this.mamp = getOpsAndValues(args[3], false);
+            this.mfreq = (ModulatorFrequencyFunction)getOpsAndValues(args[2], true);
+            this.mamp = (ModulatorAmplitudeFunction)getOpsAndValues(args[3], false);
             args = reader.ReadLine().Split(new string[] { "|" }, StringSplitOptions.None);
             if (args.Length < 3)
             {
@@ -197,21 +211,19 @@ namespace CSharpSynth.Banks.Fm
             List<byte> opList = new List<byte>();
             List<double> valueList = new List<double>();
             string start = arg.Substring(0, 4).ToLower();
-            if (isFrequencyFunction)
+            byte select = 0;
+            if (!start.Contains("freq") && !start.Contains("amp"))
+            {//if "freq" isnt used then we make sure the value passed in is negated by *0;
+                opList.Add(0);
+                valueList.Add(0);
+            }
+            else if (start.Contains("freq"))
             {
-                if (!start.Contains("freq"))
-                {//if "freq" isnt used then we make sure the value passed in is negated by *0;
-                    opList.Add(0);
-                    valueList.Add(0);
-                }
+                select = 0;
             }
             else
             {
-                if (!start.Contains("amp"))
-                {//if "amp" isnt used then we make sure the value passed in is negated by *0;
-                    opList.Add(0);
-                    valueList.Add(0);
-                }
+                select = 1;
             }
             bool opOcurred = false;
             bool neg = false;
@@ -273,19 +285,28 @@ namespace CSharpSynth.Banks.Fm
             while (opList.Count < valueList.Count)
                 opList.Add(2);
             if (isFrequencyFunction)
-                return new ModulatorFrequencyFunction(opList.ToArray(), valueList.ToArray());
+            {
+                ModulatorFrequencyFunction ifm = new ModulatorFrequencyFunction(opList.ToArray(), valueList.ToArray());
+                ifm.inputSelect = select;
+                return ifm;
+            }
             else
-                return new ModulatorAmplitudeFunction(opList.ToArray(), valueList.ToArray());
+            {
+                ModulatorAmplitudeFunction ifm = new ModulatorAmplitudeFunction(opList.ToArray(), valueList.ToArray());
+                ifm.inputSelect = select;
+                return ifm;
+            }
         }
         //--Private Classes
         private class ModulatorFrequencyFunction : IFMComponent
         {
+            public byte inputSelect = 0;
             private byte[] ops; //0 = "*", 1 = "/", 2 = "+", 3 = "-"
             private double[] values;
             public ModulatorFrequencyFunction(byte[] ops, double[] values)
             {
                 if (ops.Length != values.Length)
-                    throw new Exception("Invalid FM frequency function.");
+                    throw new Exception("Invalid FM Frequency function.");
                 this.ops = ops;
                 this.values = values;
             }
@@ -314,6 +335,7 @@ namespace CSharpSynth.Banks.Fm
         }
         private class ModulatorAmplitudeFunction : IFMComponent
         {
+            public byte inputSelect = 1;
             private byte[] ops; //0 = "*", 1 = "/", 2 = "+", 3 = "-"
             private double[] values;
             public ModulatorAmplitudeFunction(byte[] ops, double[] values)

@@ -82,12 +82,12 @@ namespace CSharpSynth.Synthesis
 		
 		#region Public Methods
 		
-		/* You can pass ssmplesperBuffer as milliseconds or as samplesperBuffer, default is in millisecodns */
-		public StreamSynthesizer(int sampleRate, int audioChannels, int samplesInMillisecondsOrSamplesPerBuffer, int maxpoly, bool bufferInMilliseconds = true)
+		/* stick with samples per buffer, if you want ms use the helper method to convert to samples*/
+		public StreamSynthesizer(int sampleRate, int audioChannels, int samplesPerBuffer, int maxpoly)
         {
 			this.sampleRate = sampleRate;
             this.audioChannels = audioChannels;
-            this.samplesperBuffer = bufferInMilliseconds ? (int)((sampleRate / 1000.0) * samplesInMillisecondsOrSamplesPerBuffer) : samplesInMillisecondsOrSamplesPerBuffer;
+            this.samplesperBuffer = samplesPerBuffer;
             this.polyphony = maxpoly;
             
 			/* readonly variables can be set only in constructor, so the check has to be done here */
@@ -220,10 +220,6 @@ namespace CSharpSynth.Synthesis
         {
             NoteOffAll(true);
         }
-		//here all the parsing login needed for synth to play its sounds//
-		public void ShortMessage(byte Command, byte Data1, byte Data2){
-			
-		}
 		
         public void NoteOn(int channel, int note, int velocity, int program)
         {
@@ -322,7 +318,7 @@ namespace CSharpSynth.Synthesis
         }
 		
 		public void GetNext(float[] buffer)
-        {//Call this to process the next part of audio and return it in raw form.
+        {
             ClearWorkingBuffer();
             FillWorkingBuffer();
             for (int x = 0; x < effects.Count; x++)
@@ -415,11 +411,10 @@ namespace CSharpSynth.Synthesis
 		
 		private void ConvertBuffer(float[,] from, float[] to)
         {
-            const int bytesPerSample = 2; //again we assume 16 bit audio
             int channels = from.GetLength(0);
             int bufferSize = from.GetLength(1);
             // Make sure the buffer sizes are correct
-            System.Diagnostics.Debug.Assert(to.Length == bufferSize * channels * bytesPerSample, "Buffer sizes are mismatched.");
+            System.Diagnostics.Debug.Assert(to.Length == from.Length, "Buffer sizes are mismatched.");
             						
 			int k = 0;
 			for (int i = 0; i < bufferSize; i++)
@@ -429,10 +424,9 @@ namespace CSharpSynth.Synthesis
                     // Apply master volume
                     float floatSample = from[c, i] * MainVolume;
 
-                    // Clamp the value to the [-1.0..1.0] range
-                    //floatSample = SynthHelper.Clamp(floatSample, -1.0f, 1.0f);
+                    //Clamp the value to the [-1.0..1.0] range
+                    to[k] = SynthHelper.Clamp(floatSample, -1.0f, 1.0f);
 
-             		to[k] = floatSample;
 					k++;
                 }
             }
@@ -445,7 +439,7 @@ namespace CSharpSynth.Synthesis
             LinkedListNode<Voice> delnode;
             if (seq != null && seq.isPlaying)//Use sequencer
             {
-                MidiSequencerEvent seqEvent = seq.Process(samplesperBuffer);
+                MidiSequencerEvent seqEvent = seq.ProcessFrame(samplesperBuffer);
                 if (seqEvent == null)
                     return;
                 int oldtime = 0;
@@ -458,7 +452,8 @@ namespace CSharpSynth.Synthesis
                         node = activeVoices.First;
                         while (node != null)
                         {
-                            if (oldtime < 0 || waitTime < 0) return; //throw new Exception("dd"); we can not afford to throw unknown exception into unity engine otherwise our packages won't be submitted.
+                            if (oldtime < 0 || waitTime < 0)
+                                throw new Exception("dd");
                             node.Value.Process(sampleBuffer, oldtime, oldtime + waitTime);
                             if (node.Value.isInUse == false)
                             {
