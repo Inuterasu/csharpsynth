@@ -1,0 +1,7 @@
+To run the exe file on OSX, you need to have "mono" command tool installed on you system.
+
+> cd builddirectory
+> mono CSharpSythTest.exe
+
+Now you should be runnin the exe file. 
+More on : http://www.mono-project.com/Guide:Running_Mono_Applications

@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DF427952-0E78-4190-9A5A-57DB0E0F5408}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpSynth</RootNamespace>
+    <AssemblyName>CSharpSynth</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VISUALSTUDIO</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Analog\AnalogInstrument.cs">
+      <Link>Banks\Analog\AnalogInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\BankManager.cs">
+      <Link>Banks\BankManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Fm\Envelope.cs">
+      <Link>Banks\Fm\Envelope.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Fm\FMInstrument.cs">
+      <Link>Banks\Fm\FMInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Fm\IFMComponent.cs">
+      <Link>Banks\Fm\IFMComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Instrument.cs">
+      <Link>Banks\Instrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\InstrumentBank.cs">
+      <Link>Banks\InstrumentBank.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Sfz\SfzInstrument.cs">
+      <Link>Banks\Sfz\SfzInstrument.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Banks\Sfz\SfzRegion.cs">
+      <Link>Banks\Sfz\SfzRegion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Effects\BasicAudioEffect.cs">
+      <Link>Effects\BasicAudioEffect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Effects\dBMeter.cs">
+      <Link>Effects\dBMeter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Effects\Echo.cs">
+      <Link>Effects\Echo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Effects\SincFilter.cs">
+      <Link>Effects\SincFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Midi\MidiEvent.cs">
+      <Link>Midi\MidiEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Midi\MidiFile.cs">
+      <Link>Midi\MidiFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Midi\MidiHeader.cs">
+      <Link>Midi\MidiHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Midi\MidiHelper.cs">
+      <Link>Midi\MidiHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Midi\MidiTrack.cs">
+      <Link>Midi\MidiTrack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\PlatformDebug.cs">
+      <Link>PlatformDebug.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Sequencer\MidiSequencer.cs">
+      <Link>Sequencer\MidiSequencer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Sequencer\MidiSequencerEvent.cs">
+      <Link>Sequencer\MidiSequencerEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\NoteRegistryKey.cs">
+      <Link>Synthesis\NoteRegistryKey.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.cs">
+      <Link>Synthesis\StreamSynthesizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\SynthHelper.cs">
+      <Link>Synthesis\SynthHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\Voice.cs">
+      <Link>Synthesis\Voice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\DataChunk.cs">
+      <Link>Wave\DataChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\BiQuadLowPass.cs">
+      <Link>Wave\DSP\BiQuadLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\SincLowPass.cs">
+      <Link>Wave\DSP\SincLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\FactChunk.cs">
+      <Link>Wave\FactChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\FormatChunk.cs">
+      <Link>Wave\FormatChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\IChunk.cs">
+      <Link>Wave\IChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\MasterChunk.cs">
+      <Link>Wave\MasterChunk.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\Sample.cs">
+      <Link>Wave\Sample.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\WaveFile.cs">
+      <Link>Wave\WaveFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\WaveFileReader.cs">
+      <Link>Wave\WaveFileReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\WaveFileWriter.cs">
+      <Link>Wave\WaveFileWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\WaveHelper.cs">
+      <Link>Wave\WaveHelper.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
