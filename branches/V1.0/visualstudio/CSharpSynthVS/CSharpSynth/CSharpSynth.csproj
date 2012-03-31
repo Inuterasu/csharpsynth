@@ -112,6 +112,12 @@
     <Compile Include="..\..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.cs">
       <Link>Synthesis\StreamSynthesizer.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.MidiControl.cs">
+      <Link>Synthesis\StreamSynthesizer.MidiControl.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\StreamSynthesizer.MidiServer.cs">
+      <Link>Synthesis\StreamSynthesizer.MidiServer.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Synthesis\SynthHelper.cs">
       <Link>Synthesis\SynthHelper.cs</Link>
     </Compile>
@@ -155,6 +161,7 @@
       <Link>Wave\WaveHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sequencer\FineCoarseControl.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

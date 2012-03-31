@@ -32,13 +32,19 @@
             switch (parameter1)
             {
                 case 1:
-                    return MidiHelper.ControllerType.Modulation;
+                    return MidiHelper.ControllerType.Modulation; //msb coarse
+                case 6:
+                    return MidiHelper.ControllerType.DataEntry; //coarse
+                case 38:
+                    return MidiHelper.ControllerType.DataEntry; //fine
                 case 7:
-                    return MidiHelper.ControllerType.MainVolume;
+                    return MidiHelper.ControllerType.MainVolume; //msb
                 case 10:
                     return MidiHelper.ControllerType.Pan;
-                case 64:
-                    return MidiHelper.ControllerType.DamperPedal;
+                case 100:
+                    return MidiHelper.ControllerType.RegisteredParameter; //fine
+                case 101:
+                    return MidiHelper.ControllerType.RegisteredParameter; //coarse
                 case 121:
                     return MidiHelper.ControllerType.ResetControllers;
                 case 123:

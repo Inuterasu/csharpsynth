@@ -1,4 +1,5 @@
-﻿namespace CSharpSynth.Midi
+﻿using System;
+namespace CSharpSynth.Midi
 {
     public static class MidiHelper
     {
@@ -15,6 +16,13 @@
         public const byte Min_Controller = 0;
         public const byte Max_GenericParameter = 127;
         public const byte Min_GenericParameter = 0;
+        //--Public Methods
+        public static float GetLogarithmicVolume(byte value)
+        {//uses logarithmic method
+            if (value == 0)
+                return 0.0f;
+            return (float)(1.0 - (Math.Log10(value / 127.0) / -2.2));
+        }
         //--Enum
         public enum MidiTimeFormat
         {

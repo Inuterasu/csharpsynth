@@ -21,6 +21,10 @@ namespace CSharpSynth.Synthesis
         private float[] panPositions_;
         private float[] volPositions_;
         private double[] tunePositions_;
+        private double[] vibraPositions_;
+        private double[] pitchWheelSemitoneRange_;
+        private byte[] RPC; //register coarse
+        private byte[] RPF; //register fine
         private MidiSequencer seq;
         private List<BasicAudioEffect> effects;
 				
@@ -42,6 +46,22 @@ namespace CSharpSynth.Synthesis
         public int BufferSize
         {
             get { return rawBufferLength; }
+        }
+        public byte[] RegisteredParameterCoarse
+        {
+            get { return RPC; }
+        }
+        public byte[] RegisteredParameterFine
+        {
+            get { return RPF; }
+        }
+        public double[] PitchWheelPositions
+        {
+            get { return pitchWheelSemitoneRange_; }
+        }
+        public double[] VibratoPositions
+        {
+            get { return vibraPositions_; }
         }
         public float[] PanPositions
         {
@@ -203,6 +223,12 @@ namespace CSharpSynth.Synthesis
             //Reset Vol Positions back to 1.00f
             for (int x = 0; x < volPositions_.Length; x++)
                 volPositions_[x] = 1.00f;
+            Array.Clear(vibraPositions_, 0, vibraPositions_.Length);
+            //Reset Vol Positions back to 1.00f
+            for (int x = 0; x < volPositions_.Length; x++)
+                pitchWheelSemitoneRange_[x] = 2.0;
+            Array.Clear(RPC, 0, RPC.Length);
+            Array.Clear(RPF, 0, RPF.Length);
         }
 		
         public void Dispose()
@@ -455,6 +481,10 @@ namespace CSharpSynth.Synthesis
             for (int x = 0; x < volPositions_.Length; x++)
                 volPositions_[x] = 1.00f;
             tunePositions_ = new double[16];
+            vibraPositions_ = new double[16];
+            pitchWheelSemitoneRange_ = new double[16];
+            RPC = new byte[16];
+            RPF = new byte[16];
             //create effect list
             effects = new List<BasicAudioEffect>();
         }
