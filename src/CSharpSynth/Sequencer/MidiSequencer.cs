@@ -174,7 +174,10 @@ namespace CSharpSynth.Sequencer
         {
             blockList.Clear();
         }
-        public void ProcessFrame(int framesperBuffer)
+        public void ProcessFrame(float deltaTime){
+			ProcessFrame((int)(deltaTime*sampleRate));
+		}
+		public void ProcessFrame(int framesperBuffer)
         {
             seqEvt.Events.Clear();
             if (isPlaying)//Use sequencer
