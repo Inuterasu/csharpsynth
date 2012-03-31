@@ -18,7 +18,7 @@ namespace CSharpSynth.Synthesis
         private float pan;
         private float rightpan;
         private float leftpan;
-        private double variableSampleRate;
+        //private double variableSampleRate;
         //counters and modifiers
         private bool inUse;
         private VoiceState state;
@@ -28,6 +28,9 @@ namespace CSharpSynth.Synthesis
         private int fadeCounter;
         private int decayCounter;
         private float gainControl = .3f;
+        //generators
+        private double vibrafreq = 8;
+        private double vibratime;
         //--Enum
         private enum VoiceState { None, Attack, Sustain, Hold, Release }
         //--Public Properties
@@ -67,6 +70,7 @@ namespace CSharpSynth.Synthesis
             this.velocity = (velocity / 127.0f);
             this.channel = channel;
             time = 0.0;
+            vibratime = 0.0;
             fadeMultiplier = 1.0f;
             decayCounter = 0;
             fadeCounter = 0;
@@ -147,7 +151,7 @@ namespace CSharpSynth.Synthesis
                 if (synth.Channels == 2 && pan != synth.PanPositions[channel])
                     this.setPan(synth.PanPositions[channel]);
                 //set sampleRate for tune
-                variableSampleRate = synth.SampleRate * Math.Pow(2.0, (synth.TunePositions[channel] * -1.0) / 12.0);
+                double variableSampleRate = synth.SampleRate * Math.Pow(2.0, (synth.TunePositions[channel] * -1.0) / 12.0);
                 //main loop
                 for (int i = startIndex; i < endIndex; i++)
                 {
@@ -232,7 +236,10 @@ namespace CSharpSynth.Synthesis
                         workingBuffer[0, i] += (sample * fadeMultiplier * leftpan * gainControl);
                         workingBuffer[1, i] += (sample * fadeMultiplier * rightpan * gainControl);
                     }
-                    time += 1.0 / variableSampleRate;
+                    time += 1.0 / (variableSampleRate + SynthHelper.Sine(vibrafreq, vibratime) * (variableSampleRate * synth.VibratoPositions[channel]));
+                    vibratime += 1.0 / variableSampleRate;
+                    if (vibratime >= 1.0 / vibrafreq)
+                        vibratime = vibratime % (1.0 / vibrafreq);
                     //bailout of the loop if there is no reason to continue.
                     if (inUse == false)
                         return;
@@ -246,6 +253,7 @@ namespace CSharpSynth.Synthesis
             state = VoiceState.None;
             note = 0;
             time = 0.0;
+            vibratime = 0.0;
             fadeMultiplier = 1.0f;
             decayCounter = 0;
             fadeCounter = 0;

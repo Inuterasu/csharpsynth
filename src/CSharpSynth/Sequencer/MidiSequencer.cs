@@ -13,7 +13,6 @@ namespace CSharpSynth.Sequencer
         private StreamSynthesizer synth;
         private int[] currentPrograms;
         private List<byte> blockList;
-        private double PitchWheelSemitoneRange = 2.0;
         private bool playing = false;
         private bool looping = false;
         private MidiSequencerEvent seqEvt;
@@ -45,11 +44,6 @@ namespace CSharpSynth.Sequencer
         {
             get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(synth.SampleRate, sampleTime)); }
             set { SetTime(value); }
-        }
-        public double PitchWheelRange
-        {
-            get { return PitchWheelSemitoneRange; }
-            set { PitchWheelSemitoneRange = value; }
         }
         //--Public Methods
         public MidiSequencer(StreamSynthesizer synth)
@@ -203,13 +197,7 @@ namespace CSharpSynth.Sequencer
         }
         public void ResetControllers()
         {
-            //Reset Pan Positions back to 0.0f
-            Array.Clear(synth.PanPositions, 0, synth.PanPositions.Length);
-            //Set Tuning Positions back to 0.0
-            Array.Clear(synth.TunePositions, 0, synth.TunePositions.Length);
-            //Reset Vol Positions back to 1.00f
-            for (int x = 0; x < synth.VolPositions.Length; x++)
-                synth.VolPositions[x] = 1.00f;
+            synth.resetSynthControls();
         }
         public MidiSequencerEvent ProcessFrame(int frame)
         {
@@ -279,7 +267,7 @@ namespace CSharpSynth.Sequencer
                         break;
                     case MidiHelper.MidiChannelEvent.Pitch_Bend:
                         //Store PitchBend as the # of semitones higher or lower
-                        synth.TunePositions[midiEvent.channel] = (double)midiEvent.Parameters[1] * PitchWheelSemitoneRange;
+                        synth.TunePositions[midiEvent.channel] = (double)midiEvent.Parameters[1] * synth.PitchWheelPositions[midiEvent.channel];
                         break;
                     case MidiHelper.MidiChannelEvent.Controller:
                         switch (midiEvent.GetControllerType())
@@ -288,10 +276,35 @@ namespace CSharpSynth.Sequencer
                                 synth.NoteOffAll(true);
                                 break;
                             case MidiHelper.ControllerType.MainVolume:
-                                synth.VolPositions[midiEvent.channel] = midiEvent.parameter2 / 127.0f;
+                                if (midiEvent.parameter1 == 7) //coarse
+                                {
+                                    //synth.VolPositions[midiEvent.channel] = midiEvent.parameter2 / 127.0f;
+                                    synth.VolPositions[midiEvent.channel] = MidiHelper.GetLogarithmicVolume(midiEvent.parameter2);
+                                }
+                                else if (midiEvent.parameter1 == 33) //fine
+                                {
+
+                                }
                                 break;
                             case MidiHelper.ControllerType.Pan:
                                 synth.PanPositions[midiEvent.channel] = (midiEvent.parameter2 - 64) == 63 ? 1.00f : (midiEvent.parameter2 - 64) / 64.0f;
+                                break;
+                            case MidiHelper.ControllerType.Modulation:
+                                synth.VibratoPositions[midiEvent.channel] = (midiEvent.parameter2 / 127.0) / 20.0;
+                                break;
+                            case MidiHelper.ControllerType.RegisteredParameter:
+                                if (midiEvent.parameter1 == 101) //coarse
+                                    synth.RegisteredParameterCoarse[midiEvent.channel] = midiEvent.parameter2;
+                                else
+                                    synth.RegisteredParameterFine[midiEvent.channel] = midiEvent.parameter2;
+                                break;
+                            case MidiHelper.ControllerType.DataEntry:
+                                if (midiEvent.parameter1 == 6) //coarse
+                                    if (synth.RegisteredParameterCoarse[midiEvent.channel] == 0)
+                                        synth.PitchWheelPositions[midiEvent.channel] = synth.PitchWheelPositions[midiEvent.channel] - ((int)synth.PitchWheelPositions[midiEvent.channel]) + midiEvent.parameter2;
+                                if (midiEvent.parameter1 == 38) //fine
+                                    if (synth.RegisteredParameterFine[midiEvent.channel] == 0)
+                                        synth.PitchWheelPositions[midiEvent.channel] = ((int)synth.PitchWheelPositions[midiEvent.channel]) + (midiEvent.parameter2 / 100.0);
                                 break;
                             case MidiHelper.ControllerType.ResetControllers:
                                 ResetControllers();

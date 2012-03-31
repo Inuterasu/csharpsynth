@@ -19,27 +19,27 @@ namespace CSharpSynth
 		
 #if !MONODEVELOP && !VISUALSTUDIO && !UNITY && !XNA
 		static public Stream StreamLoad(string aPath){
-			return File.Open(aPath, FileMode.Open);	
+			return File.Open(aPath, FileMode.Open, FileAccess.Read);	
 		}
 		
 		static public bool FileExists(string aPath){
 			return File.Exists(aPath);	
 		}
 #endif
-		
+
 #if MONODEVELOP
 		static public Stream StreamLoad(string aPath){
-			return File.Open(aPath, FileMode.Open);
+			return File.Open(aPath, FileMode.Open, FileAccess.Read);
 		}
 		
 		static public bool FileExists(string aPath){
 			return File.Exists(aPath);	
 		}
 #endif
-		
+
 #if VISUALSTUDIO
-		static public Stream StreamLoad(string aPath){
-			return File.Open(aPath, FileMode.Open);	
+        static public Stream StreamLoad(string aPath){
+			return File.Open(aPath, FileMode.Open, FileAccess.Read);	
 		}
 		
 		static public bool FileExists(string aPath){
@@ -63,14 +63,14 @@ namespace CSharpSynth
 		
 #if XNA
 		static public Stream StreamLoad(string aPath){
-			return File.Open(aPath, FileMode.Open);		
+			return File.Open(aPath, FileMode.Open, FileAccess.Read);		
 		}
 		
 		static public bool FileExists(string aPath){
 			return File.Exists(aPath);	
 		}
 #endif
-		
-	}
+
+    }
 }
 
