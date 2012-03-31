@@ -35,6 +35,30 @@
                 this.presetsChunk = new PresetsChunk(chunk);
             }
         }
+		
+		public SoundFont(Stream stream)
+        {
+            RiffChunk topLevelChunk = RiffChunk.GetTopLevelChunk(new BinaryReader(stream));
+            if (!(topLevelChunk.ChunkID == "RIFF"))
+            {
+                throw new ApplicationException("Not a RIFF file");
+            }
+            string str = topLevelChunk.ReadChunkID();
+            if (str != "sfbk")
+            {
+                throw new ApplicationException(string.Format("Not a SoundFont ({0})", str));
+            }
+            RiffChunk nextSubChunk = topLevelChunk.GetNextSubChunk();
+            if (nextSubChunk.ChunkID != "LIST")
+            {
+                throw new ApplicationException(string.Format("Not info list found ({0})", nextSubChunk.ChunkID));
+            }
+            this.info = new InfoChunk(nextSubChunk);
+            RiffChunk chunk = topLevelChunk.GetNextSubChunk();
+            this.sampleData = new SampleDataChunk(chunk);
+            chunk = topLevelChunk.GetNextSubChunk();
+            this.presetsChunk = new PresetsChunk(chunk);
+        }
 
         public override string ToString()
         {
