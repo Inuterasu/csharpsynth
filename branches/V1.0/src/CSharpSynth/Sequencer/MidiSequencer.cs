@@ -10,20 +10,33 @@ namespace CSharpSynth.Sequencer
     {
         //--Variables
         private MidiFile _MidiFile;
-        private StreamSynthesizer synth;
-        private int[] currentPrograms;
         private List<byte> blockList;
         private bool playing = false;
         private bool looping = false;
         private MidiSequencerEvent seqEvt;
         private int sampleTime;
         private int eventIndex;
-        //--Events
-        public delegate void NoteOnEventHandler(int channel, int note, int velocity);
+		private int sampleRate;
+        
+		//--Events
+        
+		public delegate void NoteOnEventHandler(int channel, int note, int velocity);
         public event NoteOnEventHandler NoteOnEvent;
-        public delegate void NoteOffEventHandler(int channel, int note);
+        
+		public delegate void NoteOffEventHandler(int channel, int note);
         public event NoteOffEventHandler NoteOffEvent;
-        //--Public Properties
+        
+		public delegate void ShortMessageEventHandler(int Command, int Data1, int Data2);
+		public event ShortMessageEventHandler ShortMessageEvent;
+		
+		public delegate void ControlEventHandler();
+		public event ControlEventHandler PlayEvent;
+		public event ControlEventHandler StopEvent;
+//		public event ControlEventHandler PauseEvent;
+//		public event ControlEventHandler ContinueEvent;
+		public event ControlEventHandler FinishedEvent;
+		
+		//--Public Properties
         public bool isPlaying
         {
             get { return playing; }
@@ -38,37 +51,21 @@ namespace CSharpSynth.Sequencer
         }
         public TimeSpan EndTime
         {
-            get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(synth.SampleRate, (int)_MidiFile.Tracks[0].TotalTime)); }
+            get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(sampleRate, (int)_MidiFile.Tracks[0].TotalTime)); }
         }
         public TimeSpan Time
         {
-            get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(synth.SampleRate, sampleTime)); }
+            get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(sampleRate, sampleTime)); }
             set { SetTime(value); }
         }
-        //--Public Methods
-        public MidiSequencer(StreamSynthesizer synth)
+		//--Public Methods
+        public MidiSequencer(int aSampleRate)
         {
-            currentPrograms = new int[16]; //16 channels
-            this.synth = synth;
-            this.synth.setSequencer(this);
+            sampleRate = aSampleRate;
             blockList = new List<byte>();
             seqEvt = new MidiSequencerEvent();
         }
-        public string getProgramName(int channel)
-        {
-            if (channel == 9)
-                return synth.SoundBank.getInstrument(currentPrograms[channel], true).Name;
-            else
-                return synth.SoundBank.getInstrument(currentPrograms[channel], false).Name;
-        }
-        public int getProgramIndex(int channel)
-        {
-            return currentPrograms[channel];
-        }
-        public void setProgram(int channel, int program)
-        {
-            currentPrograms[channel] = program;
-        }
+
         public bool Looping
         {
             get { return looping; }
@@ -112,22 +109,6 @@ namespace CSharpSynth.Sequencer
                 }
             }
             blockList.Clear();
-            if (UnloadUnusedInstruments == true)
-            {
-                if (synth.SoundBank == null)
-                {//If there is no bank warn the developer =)
-                    DBG.error("No Soundbank loaded !");
-                }
-                else
-                {
-                    string bankStr = synth.SoundBank.BankPath;
-                    //Remove old bank being used by synth
-                    synth.UnloadBank();
-                    //Add the bank and switch to it with the synth
-                    BankManager.addBank(new InstrumentBank(synth.SampleRate, bankStr, _MidiFile.Tracks[0].Programs, _MidiFile.Tracks[0].DrumPrograms));
-                    synth.SwitchBank(BankManager.Count - 1);
-                }
-            }
             return true;
         }
         public bool LoadMidi(string file, bool UnloadUnusedInstruments)
@@ -150,24 +131,22 @@ namespace CSharpSynth.Sequencer
         {
             if (playing == true)
                 return;
-            //Clear the current programs for the channels.
-            Array.Clear(currentPrograms, 0, currentPrograms.Length);
-            //Clear vol, pan, and tune
-            ResetControllers();
             //set bpm
             _MidiFile.BeatsPerMinute = 120;
             //Let the synth know that the sequencer is ready.
             eventIndex = 0;
+			if(PlayEvent != null) PlayEvent();
             playing = true;
         }
         public void Stop(bool immediate)
         {
-            playing = false;
+            if(StopEvent != null) StopEvent();
+			playing = false;
             sampleTime = 0;
-            if (immediate)
-                synth.NoteOffAll(true);
-            else
-                synth.NoteOffAll(false);
+//            if (immediate)
+//                synth.NoteOffAll(true);
+//            else
+//                synth.NoteOffAll(false);
         }
         public bool isChannelMuted(int channel)
         {
@@ -195,120 +174,73 @@ namespace CSharpSynth.Sequencer
         {
             blockList.Clear();
         }
-        public void ResetControllers()
-        {
-            synth.resetSynthControls();
-        }
-        public MidiSequencerEvent ProcessFrame(int frame)
+        public void ProcessFrame(int framesperBuffer)
         {
             seqEvt.Events.Clear();
-            //stop or loop
-            if (sampleTime >= (int)_MidiFile.Tracks[0].TotalTime)
+            if (isPlaying)//Use sequencer
             {
-                sampleTime = 0;
-                if (looping == true)
+				//stop or loop
+	            if (sampleTime >= (int)_MidiFile.Tracks[0].TotalTime)
+	            {
+	                sampleTime = 0;
+	                if (looping == true)
+	                {
+	                    //set bpm
+	                    _MidiFile.BeatsPerMinute = 120;
+	                    //Let the synth know that the sequencer is ready.
+	                    eventIndex = 0;
+	                }
+	                else
+	                {
+	                    playing = false;
+						if(FinishedEvent != null) {
+							FinishedEvent();	
+						}
+	                    return;
+	                }
+	            }
+	            while (eventIndex < _MidiFile.Tracks[0].EventCount && _MidiFile.Tracks[0].MidiEvents[eventIndex].deltaTime < (sampleTime + framesperBuffer))
+	            {
+	                seqEvt.Events.Add(_MidiFile.Tracks[0].MidiEvents[eventIndex]);
+	                eventIndex++;
+	            }
+			        	
+                if (seqEvt == null) return;
+				
+                int oldtime = 0;
+                int waitTime = 0;
+                for (int x = 0; x < seqEvt.Events.Count; x++)
                 {
-                    //Clear the current programs for the channels.
-                    Array.Clear(currentPrograms, 0, currentPrograms.Length);
-                    //Clear vol, pan, and tune
-                    ResetControllers();
-                    //set bpm
-                    _MidiFile.BeatsPerMinute = 120;
-                    //Let the synth know that the sequencer is ready.
-                    eventIndex = 0;
+                    
+                    oldtime = oldtime + waitTime;
+                    //Now process the event
+                    ProcessMidiEvent(seqEvt.Events[x]);
                 }
-                else
-                {
-                    playing = false;
-                    synth.NoteOffAll(true);
-                    return null;
-                }
+              
+                IncrementSampleCounter(framesperBuffer);
             }
-            while (eventIndex < _MidiFile.Tracks[0].EventCount && _MidiFile.Tracks[0].MidiEvents[eventIndex].deltaTime < (sampleTime + frame))
-            {
-                seqEvt.Events.Add(_MidiFile.Tracks[0].MidiEvents[eventIndex]);
-                eventIndex++;
-            }
-            return seqEvt;
-        }
-        public void IncrementSampleCounter(int amount)
+		}
+        public void IncrementSampleCounter(int framesperBuffer)
         {
-            sampleTime = sampleTime + amount;
+            sampleTime = sampleTime + framesperBuffer;
         }
         public void ProcessMidiEvent(MidiEvent midiEvent)
         {
             if (midiEvent.midiChannelEvent != MidiHelper.MidiChannelEvent.None)
             {
+				if (blockList.Contains(midiEvent.channel)) return;
+				if(ShortMessageEvent != null){
+					ShortMessageEvent((int)midiEvent.midiChannelEvent << 4 | midiEvent.channel, midiEvent.parameter1, midiEvent.parameter2);	
+				}
                 switch (midiEvent.midiChannelEvent)
                 {
-                    case MidiHelper.MidiChannelEvent.Program_Change:
-                        if (midiEvent.channel != 9)
-                        {
-                            if (midiEvent.parameter1 < synth.SoundBank.InstrumentCount)
-                                currentPrograms[midiEvent.channel] = midiEvent.parameter1;
-                        }
-                        else //its the drum channel
-                        {
-                            if (midiEvent.parameter1 < synth.SoundBank.DrumCount)
-                                currentPrograms[midiEvent.channel] = midiEvent.parameter1;
-                        }
-                        break;
                     case MidiHelper.MidiChannelEvent.Note_On:
-                        if (blockList.Contains(midiEvent.channel))
-                            return;
                         if (this.NoteOnEvent != null)
                             this.NoteOnEvent(midiEvent.channel, midiEvent.parameter1, midiEvent.parameter2);
-                        synth.NoteOn(midiEvent.channel, midiEvent.parameter1, midiEvent.parameter2, currentPrograms[midiEvent.channel]);
                         break;
                     case MidiHelper.MidiChannelEvent.Note_Off:
                         if (this.NoteOffEvent != null)
                             this.NoteOffEvent(midiEvent.channel, midiEvent.parameter1);
-                        synth.NoteOff(midiEvent.channel, midiEvent.parameter1);
-                        break;
-                    case MidiHelper.MidiChannelEvent.Pitch_Bend:
-                        //Store PitchBend as the # of semitones higher or lower
-                        synth.TunePositions[midiEvent.channel] = (double)midiEvent.Parameters[1] * synth.PitchWheelPositions[midiEvent.channel];
-                        break;
-                    case MidiHelper.MidiChannelEvent.Controller:
-                        switch (midiEvent.GetControllerType())
-                        {
-                            case MidiHelper.ControllerType.AllNotesOff:
-                                synth.NoteOffAll(true);
-                                break;
-                            case MidiHelper.ControllerType.MainVolume:
-                                synth.VolPositions[midiEvent.channel] = MidiHelper.GetLogarithmicVolume(midiEvent.parameter2);
-                                break;
-							case MidiHelper.ControllerType.MainVolumeLSB:
-                                
-                                break;
-                            case MidiHelper.ControllerType.Pan:
-                                synth.PanPositions[midiEvent.channel] = (midiEvent.parameter2 - 64) == 63 ? 1.00f : (midiEvent.parameter2 - 64) / 64.0f;
-                                break;
-                            case MidiHelper.ControllerType.Modulation:
-                                synth.VibratoPositions[midiEvent.channel] = (midiEvent.parameter2 / 127.0) / 20.0;
-                                break;
-                            case MidiHelper.ControllerType.RegisteredParameterLSB:
-                                synth.RegisteredParameterFine[midiEvent.channel] = midiEvent.parameter2;
-								break;
-							case MidiHelper.ControllerType.RegisteredParameterMSB:
-								synth.RegisteredParameterCoarse[midiEvent.channel] = midiEvent.parameter2;
-								break;
-                            case MidiHelper.ControllerType.DataEntry:
-                                if (midiEvent.parameter1 == 6) //coarse
-                                    if (synth.RegisteredParameterCoarse[midiEvent.channel] == 0)
-                                        synth.PitchWheelPositions[midiEvent.channel] = synth.PitchWheelPositions[midiEvent.channel] - ((int)synth.PitchWheelPositions[midiEvent.channel]) + midiEvent.parameter2;
-                                if (midiEvent.parameter1 == 38) //fine
-                                    if (synth.RegisteredParameterFine[midiEvent.channel] == 0)
-                                        synth.PitchWheelPositions[midiEvent.channel] = ((int)synth.PitchWheelPositions[midiEvent.channel]) + (midiEvent.parameter2 / 100.0);
-                                break;
-                            case MidiHelper.ControllerType.ResetControllers:
-                                ResetControllers();
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
                         break;
                 }
             }
@@ -327,29 +259,25 @@ namespace CSharpSynth.Sequencer
         public void Dispose()
         {
             Stop(true);
-            //Set anything that may become a circular reference to null...
-            synth = null;
             _MidiFile = null;
             seqEvt = null;
         }
         //--Private Methods
         private int DeltaTimetoSamples(uint DeltaTime)
         {
-            return SynthHelper.getSampleFromTime(synth.SampleRate, (DeltaTime * (60.0f / (((int)_MidiFile.BeatsPerMinute) * _MidiFile.MidiHeader.DeltaTiming))));
+            return SynthHelper.getSampleFromTime(sampleRate, (DeltaTime * (60.0f / (((int)_MidiFile.BeatsPerMinute) * _MidiFile.MidiHeader.DeltaTiming))));
         }
         private void SetTime(TimeSpan time)
         {
-            int _stime = SynthHelper.getSampleFromTime(synth.SampleRate, (float)time.TotalSeconds);
+            int _stime = SynthHelper.getSampleFromTime(sampleRate, (float)time.TotalSeconds);
             if (_stime > sampleTime)
             {
                 SilentProcess(_stime - sampleTime);
             }
             else if (_stime < sampleTime)
-            {//we have to restart the midi to make sure we get the right temp, instrument, etc
-                synth.Stop();
+            {
+				//we have to restart the midi to make sure we get the right temp, instrument, etc
                 sampleTime = 0;
-                Array.Clear(currentPrograms, 0, currentPrograms.Length);
-                ResetControllers();
                 _MidiFile.BeatsPerMinute = 120;
                 eventIndex = 0;
                 SilentProcess(_stime);

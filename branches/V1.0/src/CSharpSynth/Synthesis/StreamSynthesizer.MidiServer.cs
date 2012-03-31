@@ -29,7 +29,7 @@ namespace CSharpSynth.Synthesis
 		int channel = 0;
 		int command = 0;
 		
-		public void ShortMessage(byte aCommand, byte aData1, byte aData2){
+		public void ShortMessage(int aCommand, int aData1, int aData2){
 			
 			channel = (aCommand & 0xF);
 			command = (aCommand >> 4);
@@ -56,7 +56,7 @@ namespace CSharpSynth.Synthesis
 							NoteOffAll(true);						
 							break;
 						case MidiHelper.ControllerType.MainVolume:
-							VolPositions[channel] = MidiHelper.GetLogarithmicVolume(aData2);						
+							VolPositions[channel] = MidiHelper.GetLogarithmicVolume((byte)aData2);						
 							break;
 						case MidiHelper.ControllerType.Pan:
 							PanPositions[channel] = (aData2 - 64) == 63 ? 1.00f : (aData2 - 64) / 64.0f;						
@@ -65,10 +65,10 @@ namespace CSharpSynth.Synthesis
 							VibratoPositions[channel] = (aData2 / 127.0) / 20.0;						
 							break;
 						case MidiHelper.ControllerType.RegisteredParameterLSB:
-                            RegisteredParameterFine[channel] = aData2;
+                            RegisteredParameterFine[channel] = (byte)aData2;
 							break;
 						case MidiHelper.ControllerType.RegisteredParameterMSB:
-							RegisteredParameterCoarse[channel] = aData2;
+							RegisteredParameterCoarse[channel] = (byte)aData2;
 							break;
                         case MidiHelper.ControllerType.DataEntry:
                             if (RegisteredParameterCoarse[channel] == 0)
@@ -87,7 +87,7 @@ namespace CSharpSynth.Synthesis
                     }
                     break;
                 case MidiHelper.MidiChannelEvent.Program_Change:
-                    instruments[channel] = aData1;
+                    instruments[channel] = (byte)aData1;
                     break;
                 case MidiHelper.MidiChannelEvent.Channel_Aftertouch:
                     break;
