@@ -1,4 +1,4 @@
-﻿namespace NAudio.SoundFont
+﻿namespace CSharpSynth.SoundFont
 {
     using System;
     using System.IO;
@@ -58,11 +58,11 @@
         public object[] GetDataAsStructureArray(StructureBuilder s)
         {
             this.riffFile.BaseStream.Position = this.dataOffset;
-            if ((((ulong) this.chunkSize) % ((long) s.Length)) != 0L)
+            if ((((long) this.chunkSize) % ((long) s.Length)) != 0L)
             {
                 throw new ApplicationException(string.Format("Chunk size is: {0} not a multiple of structure size: {1}", this.chunkSize, s.Length));
             }
-            int num = (int) (((ulong) this.chunkSize) / ((long) s.Length));
+            int num = (int) (((long) this.chunkSize) / ((long) s.Length));
             object[] objArray = new object[num];
             for (int i = 0; i < num; i++)
             {

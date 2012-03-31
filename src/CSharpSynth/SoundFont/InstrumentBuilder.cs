@@ -1,4 +1,4 @@
-﻿namespace NAudio.SoundFont
+﻿namespace CSharpSynth.SoundFont
 {
     using System;
     using System.IO;

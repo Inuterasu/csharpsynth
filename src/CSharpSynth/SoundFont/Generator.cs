@@ -1,13 +1,13 @@
-﻿namespace NAudio.SoundFont
+﻿namespace CSharpSynth.SoundFont
 {
     using System;
 
     public class Generator
     {
         private GeneratorEnum generatorType;
-        private NAudio.SoundFont.Instrument instrument;
+        private CSharpSynth.SoundFont.Instrument instrument;
         private ushort rawAmount;
-        private NAudio.SoundFont.SampleHeader sampleHeader;
+        private CSharpSynth.SoundFont.SampleHeader sampleHeader;
 
         public override string ToString()
         {
@@ -47,7 +47,7 @@
             }
         }
 
-        public NAudio.SoundFont.Instrument Instrument
+        public CSharpSynth.SoundFont.Instrument Instrument
         {
             get
             {
@@ -84,7 +84,7 @@
             }
         }
 
-        public NAudio.SoundFont.SampleHeader SampleHeader
+        public CSharpSynth.SoundFont.SampleHeader SampleHeader
         {
             get
             {
