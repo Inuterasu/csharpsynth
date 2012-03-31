@@ -393,8 +393,11 @@ namespace CSharpSynth.Synthesis
                         node = activeVoices.First;
                         while (node != null)
                         {
-                            if (oldtime < 0 || waitTime < 0)
-                                throw new Exception("dd");
+                            if (oldtime < 0 || waitTime < 0) {
+                               	DBG.warn("dd");
+								return;
+								//throw new Exception("dd");
+							}
                             node.Value.Process(sampleBuffer, oldtime, oldtime + waitTime);
                             if (node.Value.isInUse == false)
                             {

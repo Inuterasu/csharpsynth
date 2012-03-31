@@ -276,15 +276,10 @@ namespace CSharpSynth.Sequencer
                                 synth.NoteOffAll(true);
                                 break;
                             case MidiHelper.ControllerType.MainVolume:
-                                if (midiEvent.parameter1 == 7) //coarse
-                                {
-                                    //synth.VolPositions[midiEvent.channel] = midiEvent.parameter2 / 127.0f;
-                                    synth.VolPositions[midiEvent.channel] = MidiHelper.GetLogarithmicVolume(midiEvent.parameter2);
-                                }
-                                else if (midiEvent.parameter1 == 33) //fine
-                                {
-
-                                }
+                                synth.VolPositions[midiEvent.channel] = MidiHelper.GetLogarithmicVolume(midiEvent.parameter2);
+                                break;
+							case MidiHelper.ControllerType.MainVolumeLSB:
+                                
                                 break;
                             case MidiHelper.ControllerType.Pan:
                                 synth.PanPositions[midiEvent.channel] = (midiEvent.parameter2 - 64) == 63 ? 1.00f : (midiEvent.parameter2 - 64) / 64.0f;
@@ -292,12 +287,12 @@ namespace CSharpSynth.Sequencer
                             case MidiHelper.ControllerType.Modulation:
                                 synth.VibratoPositions[midiEvent.channel] = (midiEvent.parameter2 / 127.0) / 20.0;
                                 break;
-                            case MidiHelper.ControllerType.RegisteredParameter:
-                                if (midiEvent.parameter1 == 101) //coarse
-                                    synth.RegisteredParameterCoarse[midiEvent.channel] = midiEvent.parameter2;
-                                else
-                                    synth.RegisteredParameterFine[midiEvent.channel] = midiEvent.parameter2;
-                                break;
+                            case MidiHelper.ControllerType.RegisteredParameterLSB:
+                                synth.RegisteredParameterFine[midiEvent.channel] = midiEvent.parameter2;
+								break;
+							case MidiHelper.ControllerType.RegisteredParameterMSB:
+								synth.RegisteredParameterCoarse[midiEvent.channel] = midiEvent.parameter2;
+								break;
                             case MidiHelper.ControllerType.DataEntry:
                                 if (midiEvent.parameter1 == 6) //coarse
                                     if (synth.RegisteredParameterCoarse[midiEvent.channel] == 0)
