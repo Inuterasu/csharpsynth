@@ -36,15 +36,15 @@
                 case 6:
                     return MidiHelper.ControllerType.DataEntry; //coarse
                 case 38:
-                    return MidiHelper.ControllerType.DataEntry; //fine
+                    return MidiHelper.ControllerType.DataEntryLSB; //fine
                 case 7:
                     return MidiHelper.ControllerType.MainVolume; //msb
                 case 10:
                     return MidiHelper.ControllerType.Pan;
                 case 100:
-                    return MidiHelper.ControllerType.RegisteredParameter; //fine
+                    return MidiHelper.ControllerType.RegisteredParameterLSB; //fine
                 case 101:
-                    return MidiHelper.ControllerType.RegisteredParameter; //coarse
+                    return MidiHelper.ControllerType.RegisteredParameterMSB; //coarse
                 case 121:
                     return MidiHelper.ControllerType.ResetControllers;
                 case 123:
