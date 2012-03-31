@@ -1,4 +1,4 @@
-﻿namespace NAudio.SoundFont
+﻿namespace CSharpSynth.SoundFont
 {
     using System;
 
@@ -11,7 +11,7 @@
         public ushort SampleLink;
         public string SampleName;
         public uint SampleRate;
-        public NAudio.SoundFont.SFSampleLink SFSampleLink;
+        public CSharpSynth.SoundFont.SFSampleLink SFSampleLink;
         public uint Start;
         public uint StartLoop;
 
