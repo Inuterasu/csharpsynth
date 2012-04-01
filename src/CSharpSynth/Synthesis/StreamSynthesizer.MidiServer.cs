@@ -30,18 +30,17 @@ namespace CSharpSynth.Synthesis
 	        }
 	    }
 		
-		Stack<ShortMessageStruct> servermessages_ = new Stack<ShortMessageStruct>(400);
+		Queue<ShortMessageStruct> servermessages_ = new Queue<ShortMessageStruct>(400);
 		
-		public void ShortMessage(int aCommand, int data1, int data2)
+		public void ShortMessage(int aCommand, int aData1, int aData2)
         {
-			servermessages_.Push(new ShortMessageStruct{command = aCommand, data1 = shortMessage.data1, data2 = shortMessage.data2});
+			servermessages_.Enqueue(new ShortMessageStruct{command = aCommand, data1 = aData1, data2 = aData2});
 		}
-		
 		
 		ShortMessageStruct shortMessage;
 		private void ProcessServerMessages(){
 			while(servermessages_.Count > 0){
-				shortMessage = servermessages_.Pop();
+				shortMessage = servermessages_.Dequeue();
 				int channel = (shortMessage.command & 0xF);
 				int command = (shortMessage.command >> 4);
 				
