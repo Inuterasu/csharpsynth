@@ -18,7 +18,7 @@ namespace CSharpSynth.Midi
         public const byte Max_GenericParameter = 127;
         public const byte Min_GenericParameter = 0;
         //--Public Methods
-        public static float GetLogarithmicVolume(byte value)
+        public static float GetLogarithmicVolume(int value)
         {//uses logarithmic method
             if (value == 0)
                 return 0.0f;

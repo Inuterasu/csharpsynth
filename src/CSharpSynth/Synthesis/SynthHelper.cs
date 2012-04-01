@@ -7,8 +7,9 @@ namespace CSharpSynth.Synthesis
         //--Constants
         public const float DEFAULT_ATTACK = .001f;           //gradually brings volume up when note starts.
         public const float DEFAULT_RELEASE = .001f;          //gradually brings volume down when note ends.
-        public const float DEFAULT_DECAY = 9999.0f;          //gradually brings volume down during playback.
-        public const float DEFAULT_HOLD = .01f;              //controls how long sustain is held after noteOff.
+        public const float DEFAULT_DECAY = .005f;            //gradually brings volume down to sustain.
+        public const float DEFAULT_HOLD = .001f;             //holds volume at max attack level.
+        public const float DEFAULT_DELAY = .000f;            //time before note starts
         public const int DEFAULT_SAMPLERATE = 44100;
         public const double STARTING_FREQUENCY = 8.1757989156;
         public const double DOUBLE_PI = Math.PI * 2.0;

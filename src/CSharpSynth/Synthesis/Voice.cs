@@ -10,29 +10,21 @@ namespace CSharpSynth.Synthesis
         //voice parameters
         private int note;
         private float velocity;
-        private int attack;
-        private int release;
-        private int hold;
-        private int decay;
+        private ADSR_Envelope ADSR;
         private int channel;
         private float pan;
         private float rightpan;
         private float leftpan;
-        //private double variableSampleRate;
         //counters and modifiers
         private bool inUse;
-        private VoiceState state;
         private StreamSynthesizer synth;
         private double time;
         private float fadeMultiplier;
-        private int fadeCounter;
-        private int decayCounter;
-        private float gainControl = .3f;
+        private float sustainGain = .2f;
+        private float attackGain = .4f;
         //generators
         private double vibrafreq = 8;
         private double vibratime;
-        //--Enum
-        private enum VoiceState { None, Attack, Sustain, Hold, Release }
         //--Public Properties
         public bool isInUse
         {
@@ -42,27 +34,25 @@ namespace CSharpSynth.Synthesis
         {
             get { return channel; }
         }
+        public Instrument Instrument
+        {
+            get { return inst; }
+            set { inst = value; }
+        }
         //--Public Methods
         public Voice(StreamSynthesizer synth)
         {
+            ADSR = new ADSR_Envelope(synth.SampleRate);
             resetVoice();
             this.synth = synth;
             this.inst = null;
         }
         public Voice(StreamSynthesizer synth, Instrument inst)
         {
+            ADSR = new ADSR_Envelope(synth.SampleRate);
             resetVoice();
             this.synth = synth;
-            setInstrument(inst);
-        }
-        public void setInstrument(Instrument inst)
-        {
-            if (this.inst != inst)
-                this.inst = inst;
-        }
-        public Instrument getInstrument()
-        {
-            return inst;
+            this.inst = inst;
         }
         public void Start(int channel, int note, int velocity)
         {
@@ -72,50 +62,27 @@ namespace CSharpSynth.Synthesis
             time = 0.0;
             vibratime = 0.0;
             fadeMultiplier = 1.0f;
-            decayCounter = 0;
-            fadeCounter = 0;
 
             //Set note parameters in samples
-            attack = inst.getAttack(note);
-            release = inst.getRelease(note);
-            hold = inst.getHold(note);
-            decay = inst.getDecay(note);
+            ADSR.DelaySampleTime = inst.getDelay(note);
+            ADSR.AttackSampleTime = inst.getAttack(note);
+            ADSR.ReleaseSampleTime = inst.getRelease(note);
+            ADSR.HoldSampleTime = inst.getHold(note);
+            ADSR.DecaySampleTime = inst.getDecay(note);
+            ADSR.SustainLevel = sustainGain;
+            ADSR.AttackLevel = attackGain;
 
             //Set counters and initial state
-            decayCounter = decay;
-            if (attack == 0)
-                state = VoiceState.Sustain;
-            else
-            {
-                state = VoiceState.Attack;
-                fadeCounter = attack;
-            }
+            ADSR.State = ADSR_Envelope.EnvelopeState.delay;
             inUse = true;
         }
         public void Stop()
         {
-            if (hold == 0)
-            {
-                if (release == 0)
-                {
-                    state = VoiceState.None;
-                    inUse = false;
-                }
-                else
-                {
-                    state = VoiceState.Release;
-                    fadeCounter = release;
-                }
-            }
-            else
-            {
-                state = VoiceState.Hold;
-                fadeCounter = hold;
-            }
+            ADSR.State = ADSR_Envelope.EnvelopeState.release;
         }
         public void StopImmediately()
         {
-            state = VoiceState.None;
+            ADSR.State = ADSR_Envelope.EnvelopeState.none;
             inUse = false;
         }
         public void setPan(float pan)
@@ -156,65 +123,9 @@ namespace CSharpSynth.Synthesis
                 for (int i = startIndex; i < endIndex; i++)
                 {
                     //manage states and calculate volume level
-                    switch (state)
-                    {
-                        case VoiceState.Attack:
-                            fadeCounter--;
-                            if (fadeCounter <= 0)
-                            {
-                                state = VoiceState.Sustain;
-                                fadeMultiplier = 1.0f;
-                            }
-                            else
-                            {
-                                fadeMultiplier = 1.0f - (fadeCounter / (float)attack);
-                            }
-                            break;
-                        case VoiceState.Sustain:
-                            decayCounter--;
-                            if (decayCounter <= 0)
-                            {
-                                state = VoiceState.None;
-                                inUse = false;
-                                fadeMultiplier = 0.0f;
-                            }
-                            else
-                            {
-                                fadeMultiplier = decayCounter / (float)decay;
-                            }
-                            break;
-                        case VoiceState.Hold:
-                            fadeCounter--;//not used for volume
-                            decayCounter--;
-                            if (decayCounter <= 0)
-                            {
-                                state = VoiceState.None;
-                                inUse = false;
-                                fadeMultiplier = 0.0f;
-                            }
-                            else if (fadeCounter <= 0)
-                            {
-                                state = VoiceState.Release;
-                                fadeCounter = release;
-                            }
-                            else
-                            {
-                                fadeMultiplier = decayCounter / (float)decay;
-                            }
-                            break;
-                        case VoiceState.Release:
-                            fadeCounter--;
-                            if (fadeCounter <= 0)
-                            {
-                                state = VoiceState.None;
-                                inUse = false;
-                            }
-                            else
-                            {//Multiply decay with fadeout so volume doesn't suddenly rise when releasing notes
-                                fadeMultiplier = (decayCounter / (float)decay) * (fadeCounter / (float)release);
-                            }
-                            break;
-                    }
+                    fadeMultiplier = ADSR.getDAHDSREnvelopeValue();
+                    if (ADSR.State == ADSR_Envelope.EnvelopeState.none)
+                        inUse = false;
                     //end of state management
                     
                     //Decide how to sample based on channels available
@@ -225,7 +136,7 @@ namespace CSharpSynth.Synthesis
                         float sample = inst.getSampleAtTime(note, 0, synth.SampleRate, ref time);
                         sample = sample * velocity * synth.VolPositions[channel];
                         
-                        workingBuffer[0, i] += (sample * fadeMultiplier * gainControl);
+                        workingBuffer[0, i] += (sample * fadeMultiplier);
                     }
                     //mono sample to stereo output
                     else
@@ -233,8 +144,8 @@ namespace CSharpSynth.Synthesis
                         float sample = inst.getSampleAtTime(note, 0, synth.SampleRate, ref time);
                         sample = sample * velocity * synth.VolPositions[channel];
 
-                        workingBuffer[0, i] += (sample * fadeMultiplier * leftpan * gainControl);
-                        workingBuffer[1, i] += (sample * fadeMultiplier * rightpan * gainControl);
+                        workingBuffer[0, i] += (sample * fadeMultiplier * leftpan);
+                        workingBuffer[1, i] += (sample * fadeMultiplier * rightpan);
                     }
                     time += 1.0 / (variableSampleRate + SynthHelper.Sine(vibrafreq, vibratime) * (variableSampleRate * synth.VibratoPositions[channel]));
                     vibratime += 1.0 / variableSampleRate;
@@ -250,13 +161,11 @@ namespace CSharpSynth.Synthesis
         private void resetVoice()
         {
             inUse = false;
-            state = VoiceState.None;
+            ADSR.resetEnvelope();
             note = 0;
             time = 0.0;
             vibratime = 0.0;
             fadeMultiplier = 1.0f;
-            decayCounter = 0;
-            fadeCounter = 0;
             pan = 0.0f;
             channel = 0;
             rightpan = 1.0f;

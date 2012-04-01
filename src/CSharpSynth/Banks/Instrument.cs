@@ -14,6 +14,10 @@ namespace CSharpSynth.Banks
         {
             return 0.0f;
         }
+        public virtual int getDelay(int note)
+        {
+            return SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DELAY);
+        }
         public virtual int getAttack(int note)
         {
             return SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_ATTACK);

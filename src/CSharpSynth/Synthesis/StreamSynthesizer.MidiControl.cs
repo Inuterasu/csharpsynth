@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CSharpSynth.Banks;
-using CSharpSynth.Sequencer;
-using CSharpSynth.Effects;
+﻿using System.Collections.Generic;
 
 namespace CSharpSynth.Synthesis
 {
@@ -24,9 +20,9 @@ namespace CSharpSynth.Synthesis
             NoteRegistryKey r = new NoteRegistryKey((byte)channel, (byte)note);
             // Get the correct instrument depending if it is a drum or not
             if (channel == 9)
-                freeVoice.setInstrument(bank.getInstrument(program, true));
+                freeVoice.Instrument = bank.getInstrument(program, true);
             else
-                freeVoice.setInstrument(bank.getInstrument(program, false));
+                freeVoice.Instrument = bank.getInstrument(program, false);
             //Check if key already exists in registry
             if (keyRegistry.ContainsKey(r))
             {//If there are too many of these notes playing then stop the first of them before playing another
