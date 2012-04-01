@@ -385,6 +385,7 @@ namespace CSharpSynth.Synthesis
             while (node != null)
             {
                 //Process buffer with no interrupt for events
+				ProcessServerMessages();
                 node.Value.Process(sampleBuffer, 0, samplesperBuffer);
                 if (node.Value.isInUse == false)
                 {
@@ -427,8 +428,6 @@ namespace CSharpSynth.Synthesis
             RPC = new byte[16];
             RPF = new byte[16];
             resetSynthControls(); //set controls to default values
-            //create midi message queue
-            shortMessageQueue = new List<ShortMessage>();
             //create effect list
             effects = new List<BasicAudioEffect>();
         }
