@@ -8,6 +8,7 @@
         public int Attack;    //Samples 
         public int Hold;      //Samples
         public int Decay;     //Samples
+        public int Delay;     //Samples
         public float Tune;      //-1 to 1 Semitones
         public int Root;        //-127 to 127
         public byte HiNote;     //0 to 127
@@ -32,7 +33,8 @@
             Release = 0;
             Attack = 0;
             Hold = 0;
-            Decay = int.MaxValue;
+            Decay = 0;
+            Delay = 0;
             Tune = 0.0f;
             Root = 60;
             HiNote = 127;

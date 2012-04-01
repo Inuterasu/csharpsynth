@@ -15,6 +15,7 @@ namespace CSharpSynth.Banks.Fm
         private int _release;
         private int _decay;
         private int _hold;
+        private int _delay;
         private double start_time;
         private double end_time;
         private bool looping;
@@ -48,6 +49,7 @@ namespace CSharpSynth.Banks.Fm
             _release = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_RELEASE);
             _decay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
             _hold = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_HOLD);
+            _delay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DELAY);
             //open fm program file
             loadProgramFile(fmProgramFile);
             //set base attribute name
@@ -66,6 +68,7 @@ namespace CSharpSynth.Banks.Fm
                 _release = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_RELEASE);
                 _decay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
                 _hold = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_HOLD);
+                _delay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DELAY);
                 this.SampleRate = sampleRate;
             }
         }
@@ -84,6 +87,10 @@ namespace CSharpSynth.Banks.Fm
         public override int getHold(int note)
         {
             return _hold;
+        }
+        public override int getDelay(int note)
+        {
+            return _delay;
         }
         public override float getSampleAtTime(int note, int channel, int synthSampleRate, ref double time)
         {

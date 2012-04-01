@@ -33,11 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\CSharpSynth\Banks\Analog\AnalogInstrument.cs">
@@ -76,6 +71,9 @@
     <Compile Include="..\..\..\src\CSharpSynth\Effects\Echo.cs">
       <Link>Effects\Echo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Effects\Reverb.cs">
+      <Link>Effects\Reverb.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Effects\SincFilter.cs">
       <Link>Effects\SincFilter.cs</Link>
     </Compile>
@@ -105,6 +103,9 @@
     </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Sequencer\MidiSequencerEvent.cs">
       <Link>Sequencer\MidiSequencerEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Sequencer\SampleSequencer.cs">
+      <Link>Sequencer\SampleSequencer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Synthesis\ADSR_Envelope.cs">
       <Link>Synthesis\ADSR_Envelope.cs</Link>

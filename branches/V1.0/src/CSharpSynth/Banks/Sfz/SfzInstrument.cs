@@ -41,6 +41,10 @@ namespace CSharpSynth.Banks.Sfz
         {
             return regions[noteMap[note]].Hold;
         }
+        public override int getDelay(int note)
+        {
+            return regions[noteMap[note]].Delay;
+        }
         public override void enforceSampleRate(int sampleRate)
         {
             //The SFZ instrument automatically enforces the SampleRate in
@@ -59,6 +63,7 @@ namespace CSharpSynth.Banks.Sfz
                 regions[x].Release = (int)(regions[x].Release * factor);
                 regions[x].Decay = (int)(regions[x].Decay * factor);
                 regions[x].Hold = (int)(regions[x].Hold * factor);
+                regions[x].Delay = (int)(regions[x].Delay * factor);
             }
             //Enforce SampleRate on Samples
             for (int x = 0; x < base.SampleList.Length; x++)
@@ -111,7 +116,7 @@ namespace CSharpSynth.Banks.Sfz
         {
             allSamplesHaveDualChannels = true;
             SfzRegion Group = new SfzRegion();
-            bool[] groupValues = new bool[21];
+            bool[] groupValues = new bool[22];
             List<Sample> Samples = new List<Sample>();
             List<string> SampleNames = new List<string>();
             List<SfzRegion> Regions = new List<SfzRegion>();
@@ -222,6 +227,10 @@ namespace CSharpSynth.Banks.Sfz
                                             case "ampeg_hold":
                                                 groupValues[12] = true;
                                                 Group.Hold = SynthHelper.getSampleFromTime(this.SampleRate, float.Parse(Rvalue[1]));
+                                                break;
+                                            case "ampeg_delay":
+                                                groupValues[21] = true;
+                                                Group.Delay = SynthHelper.getSampleFromTime(this.SampleRate, float.Parse(Rvalue[1]));
                                                 break;
                                             case "lovel":
                                                 groupValues[13] = true;
@@ -357,6 +366,9 @@ namespace CSharpSynth.Banks.Sfz
                                             case "ampeg_hold":
                                                 r.Hold = SynthHelper.getSampleFromTime(this.SampleRate, float.Parse(Rvalue[1]));
                                                 break;
+                                            case "ampeg_delay":
+                                                r.Delay = SynthHelper.getSampleFromTime(this.SampleRate, float.Parse(Rvalue[1]));
+                                                break;
                                             case "lovel":
                                                 r.LoVelocity = (byte)int.Parse(Rvalue[1]);
                                                 break;
@@ -445,6 +457,8 @@ namespace CSharpSynth.Banks.Sfz
                     Regions[x].Effect1 = Group.Effect1;
                 if (groupValues[20] == true)
                     Regions[x].Effect2 = Group.Effect2;
+                if (groupValues[21] == true)
+                    Regions[x].Delay = Group.Delay;
             }
             base.SampleList = Samples.ToArray();
             regions = Regions.ToArray();
