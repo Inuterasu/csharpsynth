@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using CSharpSynth.Banks;
 using CSharpSynth.Effects;
+using CSharpSynth.Midi;
+using CSharpSynth.Sequencer;
 
 namespace CSharpSynth.Synthesis
 {
@@ -221,8 +223,6 @@ namespace CSharpSynth.Synthesis
             //Reset Vol Positions back to 1.00f
             for (int x = 0; x < volPositions_.Length; x++)
                 volPositions_[x] = 1.00f;
-            //Reset instruments
-            Array.Clear(instruments_, 0, instruments_.Length);
             //Reset vibrato
             Array.Clear(vibraPositions_, 0, vibraPositions_.Length);
             //Reset pitch wheel to 2 semitones
@@ -233,7 +233,13 @@ namespace CSharpSynth.Synthesis
             //Reset fine select
             Array.Clear(RPF, 0, RPF.Length);
         }
-		
+
+        public void resetPrograms()
+        {
+            //Reset instruments
+            Array.Clear(instruments_, 0, instruments_.Length);
+        }
+
         public void Dispose()
         {
             Stop();
@@ -249,7 +255,18 @@ namespace CSharpSynth.Synthesis
         {
             NoteOffAll(true);
         }
-	      		
+
+        public void GetNext(byte[] buffer, MidiSequencerEvent eventlist)
+        {//Call this process SampleSequencer Messages
+            ClearWorkingBuffer();
+            FillWorkingBuffer(eventlist);
+            for (int x = 0; x < effects.Count; x++)
+            {
+                effects[x].doEffect(sampleBuffer);
+            }
+            ConvertBuffer(sampleBuffer, buffer);
+        }
+
 		public void GetNext(byte[] buffer)
         {//Call this to process the next part of audio and return it in raw form.
             ClearWorkingBuffer();
@@ -382,7 +399,7 @@ namespace CSharpSynth.Synthesis
             LinkedListNode<Voice> node;
             LinkedListNode<Voice> delnode;
             node = activeVoices.First;
-            ProcessServerMessages();
+            ProcessAllShortMessages();
 			while (node != null)
             {
                 //Process buffer with no interrupt for events
@@ -397,6 +414,88 @@ namespace CSharpSynth.Synthesis
                 else
                 {
                     node = node.Next;
+                }
+            }
+        }
+
+        private void FillWorkingBuffer(MidiSequencerEvent eventlist)
+        {
+            // Call Process on all active voices
+            LinkedListNode<Voice> node;
+            LinkedListNode<Voice> delnode;
+            if (eventlist != null)//Use sequencer
+            {
+                int oldtime = 0;
+                int waitTime = 0;
+                for (int x = 0; x < eventlist.Events.Count; x++)
+                {
+                    waitTime = ((int)eventlist.Events[x].deltaTime - eventlist.Sequencer.SampleTime) - oldtime;
+                    if (waitTime != 0)
+                    {
+                        node = activeVoices.First;
+                        while (node != null)
+                        {
+                            if (oldtime < 0 || waitTime < 0)
+                                throw new Exception("dd");
+                            node.Value.Process(sampleBuffer, oldtime, oldtime + waitTime);
+                            if (node.Value.isInUse == false)
+                            {
+                                delnode = node;
+                                node = node.Next;
+                                freeVoices.Push(delnode.Value);
+                                activeVoices.Remove(delnode);
+                            }
+                            else
+                            {
+                                node = node.Next;
+                            }
+                        }
+                    }
+                    oldtime = oldtime + waitTime;
+                    //Now process the event
+                    ProcessSampleMessage(eventlist.Events[x]);
+                }
+                //make sure to finish the processing to the end of the buffer
+                if (oldtime < samplesperBuffer)
+                {
+                    node = activeVoices.First;
+                    while (node != null)
+                    {
+                        node.Value.Process(sampleBuffer, oldtime, samplesperBuffer);
+                        if (node.Value.isInUse == false)
+                        {
+                            delnode = node;
+                            node = node.Next;
+                            freeVoices.Push(delnode.Value);
+                            activeVoices.Remove(delnode);
+                        }
+                        else
+                        {
+                            node = node.Next;
+                        }
+                    }
+                }
+                //increment our sample count
+                eventlist.Sequencer.IncrementSampleCounter(samplesperBuffer);
+            }
+            else //Manual mode
+            {
+                node = activeVoices.First;
+                while (node != null)
+                {
+                    //Process buffer with no interrupt for events
+                    node.Value.Process(sampleBuffer, 0, samplesperBuffer);
+                    if (node.Value.isInUse == false)
+                    {
+                        delnode = node;
+                        node = node.Next;
+                        freeVoices.Push(delnode.Value);
+                        activeVoices.Remove(delnode);
+                    }
+                    else
+                    {
+                        node = node.Next;
+                    }
                 }
             }
         }

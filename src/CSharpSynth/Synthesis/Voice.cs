@@ -73,12 +73,25 @@ namespace CSharpSynth.Synthesis
             ADSR.AttackLevel = attackGain;
 
             //Set counters and initial state
-            ADSR.State = ADSR_Envelope.EnvelopeState.delay;
+            if(ADSR.DelaySampleTime != 0)
+                ADSR.State = ADSR_Envelope.EnvelopeState.delay;
+            else if (ADSR.AttackSampleTime != 0)
+                ADSR.State = ADSR_Envelope.EnvelopeState.attack;
+            else
+                ADSR.State = ADSR_Envelope.EnvelopeState.sustain;
             inUse = true;
         }
         public void Stop()
         {
-            ADSR.State = ADSR_Envelope.EnvelopeState.release;
+            if (ADSR.State == ADSR_Envelope.EnvelopeState.delay)
+            {
+                ADSR.State = ADSR_Envelope.EnvelopeState.none;
+                inUse = false;
+            }
+            else
+            {
+                ADSR.State = ADSR_Envelope.EnvelopeState.release;
+            }
         }
         public void StopImmediately()
         {

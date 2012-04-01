@@ -8,10 +8,10 @@
         private int sampleRate;
         private float peak_attackvalue;
         private float sustain_level;
-        private float delay_time;
-        private float attack_time;
-        private float hold_time;          //how long to hold
-        private float decay_time;         //how long to decay into 
+        private float delay_time;         //how long to wait before note plays
+        private float attack_time;        //how long to bring volume up to max value
+        private float hold_time;          //how long to hold at the max volume
+        private float decay_time;         //how long to decay into sustain volume
         private float release_time;       //how long it takes for volume to reach zero level
         private float time;
         //--Methods
@@ -68,7 +68,7 @@
                     time++;
                     if (time < release_time)
                     {
-                        return sustain_level - ((time / attack_time) * sustain_level);
+                        return sustain_level - ((time / release_time) * sustain_level);
                     }
                     time = 0;
                     envState = EnvelopeState.none;
@@ -79,6 +79,11 @@
         }  //Advanced 6 state envelope 
         public float getADSREnvelopeValue()
         {
+            //skip unsupported states 
+            if (envState == EnvelopeState.delay)
+                envState = EnvelopeState.attack;
+            else if (envState == EnvelopeState.hold)
+                envState = EnvelopeState.sustain;
             switch (envState)
             {
                 case EnvelopeState.none:

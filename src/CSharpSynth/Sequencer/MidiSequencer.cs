@@ -13,7 +13,7 @@ namespace CSharpSynth.Sequencer
         private List<byte> blockList;
         private bool playing = false;
         private bool looping = false;
-        private MidiSequencerEvent seqEvt;
+        //private MidiSequencerEvent seqEvt;
         private int sampleTime;
         private int eventIndex;
 		private int sampleRate;
@@ -58,18 +58,17 @@ namespace CSharpSynth.Sequencer
             get { return new TimeSpan(0, 0, (int)SynthHelper.getTimeFromSample(sampleRate, sampleTime)); }
             set { SetTime(value); }
         }
+        public bool Looping
+        {
+            get { return looping; }
+            set { looping = value; }
+        }
 		//--Public Methods
         public MidiSequencer(int aSampleRate)
         {
             sampleRate = aSampleRate;
             blockList = new List<byte>();
-            seqEvt = new MidiSequencerEvent();
-        }
-
-        public bool Looping
-        {
-            get { return looping; }
-            set { looping = value; }
+            //seqEvt = new MidiSequencerEvent();
         }
         public bool LoadMidi(MidiFile midi, bool UnloadUnusedInstruments)
         {
@@ -179,7 +178,7 @@ namespace CSharpSynth.Sequencer
 		}
 		public void ProcessFrame(int framesperBuffer)
         {
-            seqEvt.Events.Clear();
+            MidiSequencerEvent seqEvt = new MidiSequencerEvent();
             if (isPlaying)//Use sequencer
             {
 				//stop or loop
@@ -258,12 +257,6 @@ namespace CSharpSynth.Sequencer
                         break;
                 }
             }
-        }
-        public void Dispose()
-        {
-            Stop(true);
-            _MidiFile = null;
-            seqEvt = null;
         }
         //--Private Methods
         private int DeltaTimetoSamples(uint DeltaTime)
