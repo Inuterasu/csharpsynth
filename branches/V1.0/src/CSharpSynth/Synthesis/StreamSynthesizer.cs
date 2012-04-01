@@ -382,11 +382,11 @@ namespace CSharpSynth.Synthesis
             LinkedListNode<Voice> node;
             LinkedListNode<Voice> delnode;
             node = activeVoices.First;
-            while (node != null)
+            ProcessServerMessages();
+			while (node != null)
             {
                 //Process buffer with no interrupt for events
-				ProcessServerMessages();
-                node.Value.Process(sampleBuffer, 0, samplesperBuffer);
+				node.Value.Process(sampleBuffer, 0, samplesperBuffer);
                 if (node.Value.isInUse == false)
                 {
                     delnode = node;
