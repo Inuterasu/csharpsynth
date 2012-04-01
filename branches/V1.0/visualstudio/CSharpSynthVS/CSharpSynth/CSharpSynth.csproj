@@ -161,7 +161,7 @@
       <Link>Wave\WaveHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sequencer\FineCoarseControl.cs" />
+    <Compile Include="Synthesis\ADSR_Envelope.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

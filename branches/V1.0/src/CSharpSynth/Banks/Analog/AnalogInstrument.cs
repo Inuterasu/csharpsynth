@@ -10,6 +10,7 @@ namespace CSharpSynth.Banks.Analog
         private int _release;
         private int _decay;
         private int _hold;
+        private int _delay;
         //--Public Properties
         public int Attack
         {
@@ -38,6 +39,7 @@ namespace CSharpSynth.Banks.Analog
             _release = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_RELEASE);
             _decay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
             _hold = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_HOLD);
+            _delay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DELAY);
             //set base attribute name
             base.Name = waveformtype.ToString();
         }
@@ -56,6 +58,10 @@ namespace CSharpSynth.Banks.Analog
                 _hold = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_HOLD);
                 this.SampleRate = sampleRate;
             }
+        }
+        public override int getDelay(int note)
+        {
+            return _delay;
         }
         public override int getAttack(int note)
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSharpSynth.Banks;
-//using CSharpSynth.Sequencer;
 using CSharpSynth.Effects;
 
 namespace CSharpSynth.Synthesis
@@ -18,6 +17,7 @@ namespace CSharpSynth.Synthesis
         private LinkedList<Voice> activeVoices;
         private Stack<Voice> freeVoices;
         private Dictionary<NoteRegistryKey, List<Voice>> keyRegistry;
+        private int[] instruments_;
         private float[] panPositions_;
         private float[] volPositions_;
         private double[] tunePositions_;
@@ -221,11 +221,16 @@ namespace CSharpSynth.Synthesis
             //Reset Vol Positions back to 1.00f
             for (int x = 0; x < volPositions_.Length; x++)
                 volPositions_[x] = 1.00f;
+            //Reset instruments
+            Array.Clear(instruments_, 0, instruments_.Length);
+            //Reset vibrato
             Array.Clear(vibraPositions_, 0, vibraPositions_.Length);
-            //Reset Vol Positions back to 1.00f
+            //Reset pitch wheel to 2 semitones
             for (int x = 0; x < volPositions_.Length; x++)
                 pitchWheelSemitoneRange_[x] = 2.0;
+            //Reset coarse select
             Array.Clear(RPC, 0, RPC.Length);
+            //Reset fine select
             Array.Clear(RPF, 0, RPF.Length);
         }
 		
@@ -373,88 +378,24 @@ namespace CSharpSynth.Synthesis
 		
         private void FillWorkingBuffer()
         {
-            // Call Process on all active voices
+            // Call process on all active voices
             LinkedListNode<Voice> node;
             LinkedListNode<Voice> delnode;
-//            if (seq != null && seq.isPlaying)//Use sequencer
-//            {
-//                MidiSequencerEvent seqEvent = seq.ProcessFrame(samplesperBuffer);
-//                if (seqEvent == null)
-//                    return;
-//                int oldtime = 0;
-//                int waitTime = 0;
-//                for (int x = 0; x < seqEvent.Events.Count; x++)
-//                {
-//                    waitTime = ((int)seqEvent.Events[x].deltaTime - seq.SampleTime) - oldtime;
-//                    if (waitTime != 0)
-//                    {
-//                        node = activeVoices.First;
-//                        while (node != null)
-//                        {
-//                            if (oldtime < 0 || waitTime < 0) {
-//                               	DBG.warn("dd");
-//								return;
-//								//throw new Exception("dd");
-//							}
-//                            node.Value.Process(sampleBuffer, oldtime, oldtime + waitTime);
-//                            if (node.Value.isInUse == false)
-//                            {
-//                                delnode = node;
-//                                node = node.Next;
-//                                freeVoices.Push(delnode.Value);
-//                                activeVoices.Remove(delnode);
-//                            }
-//                            else
-//                            {
-//                                node = node.Next;
-//                            }
-//                        }
-//                    }
-//                    oldtime = oldtime + waitTime;
-//                    //Now process the event
-//                    seq.ProcessMidiEvent(seqEvent.Events[x]);
-//                }
-//                //make sure to finish the processing to the end of the buffer
-//                if (oldtime < samplesperBuffer)
-//                {
-//                    node = activeVoices.First;
-//                    while (node != null)
-//                    {
-//                        node.Value.Process(sampleBuffer, oldtime, samplesperBuffer);
-//                        if (node.Value.isInUse == false)
-//                        {
-//                            delnode = node;
-//                            node = node.Next;
-//                            freeVoices.Push(delnode.Value);
-//                            activeVoices.Remove(delnode);
-//                        }
-//                        else
-//                        {
-//                            node = node.Next;
-//                        }
-//                    }
-//                }
-//                //increment our sample count
-//                seq.IncrementSampleCounter(samplesperBuffer);
-//            }
-//            else //Manual mode
+            node = activeVoices.First;
+            while (node != null)
             {
-                node = activeVoices.First;
-                while (node != null)
+                //Process buffer with no interrupt for events
+                node.Value.Process(sampleBuffer, 0, samplesperBuffer);
+                if (node.Value.isInUse == false)
                 {
-                    //Process buffer with no interrupt for events
-                    node.Value.Process(sampleBuffer, 0, samplesperBuffer);
-                    if (node.Value.isInUse == false)
-                    {
-                        delnode = node;
-                        node = node.Next;
-                        freeVoices.Push(delnode.Value);
-                        activeVoices.Remove(delnode);
-                    }
-                    else
-                    {
-                        node = node.Next;
-                    }
+                    delnode = node;
+                    node = node.Next;
+                    freeVoices.Push(delnode.Value);
+                    activeVoices.Remove(delnode);
+                }
+                else
+                {
+                    node = node.Next;
                 }
             }
         }
@@ -479,13 +420,15 @@ namespace CSharpSynth.Synthesis
             //Setup Channel Data
             panPositions_ = new float[16];
             volPositions_ = new float[16];
-            for (int x = 0; x < volPositions_.Length; x++)
-                volPositions_[x] = 1.00f;
             tunePositions_ = new double[16];
             vibraPositions_ = new double[16];
+            instruments_ = new int[16];
             pitchWheelSemitoneRange_ = new double[16];
             RPC = new byte[16];
             RPF = new byte[16];
+            resetSynthControls(); //set controls to default values
+            //create midi message queue
+            shortMessageQueue = new List<ShortMessage>();
             //create effect list
             effects = new List<BasicAudioEffect>();
         }
