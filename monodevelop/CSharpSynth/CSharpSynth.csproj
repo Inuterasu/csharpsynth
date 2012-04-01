@@ -326,6 +326,12 @@
     <Compile Include="..\..\src\CSharpSynth\SoundFont\ZoneBuilder.cs">
       <Link>CSharpSynth\SoundFont\ZoneBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Sequencer\SampleSequencer.cs">
+      <Link>CSharpSynth\Sequencer\SampleSequencer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Synthesis\ADSR_Envelope.cs">
+      <Link>CSharpSynth\Synthesis\ADSR_Envelope.cs</Link>
+    </Compile>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
