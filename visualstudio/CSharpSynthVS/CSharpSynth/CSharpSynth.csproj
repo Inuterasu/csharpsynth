@@ -106,6 +106,9 @@
     <Compile Include="..\..\..\src\CSharpSynth\Sequencer\MidiSequencerEvent.cs">
       <Link>Sequencer\MidiSequencerEvent.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Synthesis\ADSR_Envelope.cs">
+      <Link>Synthesis\ADSR_Envelope.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Synthesis\NoteRegistryKey.cs">
       <Link>Synthesis\NoteRegistryKey.cs</Link>
     </Compile>
@@ -161,7 +164,6 @@
       <Link>Wave\WaveHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Synthesis\ADSR_Envelope.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
