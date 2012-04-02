@@ -42,6 +42,7 @@ namespace CSharpSynth.Synthesis
             while(servermessages_.Count > 0)
             {
                 shortMessage = servermessages_.Dequeue();
+				ProcessShortMessage(shortMessage);
 			}
 		}
         //short msg sequencer process - process single msg
