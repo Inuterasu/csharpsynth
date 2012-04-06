@@ -94,6 +94,14 @@ namespace CSharpSynth.Synthesis
             value *= 12;
             return value + (12 + Array.IndexOf(noteString,noteLetter));
         }
+        public static float dBtoLinear(double dBvalue)
+        {
+            return (float)(Math.Pow(10.0, (dBvalue / 20.0)));
+        }
+        public static float LineartodB(double floatvalue)
+        {
+            return (float)(20.0 * Math.Log10(floatvalue));
+        }
         public static WaveFormType getTypeFromString(string wavetype)
         {
             switch (wavetype.Trim().ToLower())

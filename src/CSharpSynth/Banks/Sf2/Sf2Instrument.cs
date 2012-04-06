@@ -1,46 +1,52 @@
 ﻿using System;
-using System.IO;
-using CSharpSynth.Wave;
 using CSharpSynth.Synthesis;
+using System.Collections.Generic;
 
 namespace CSharpSynth.Banks.Sf2
 {
     public class Sf2Instrument : Instrument
     {
+        private int[,] noteMap = new int[128,128]; //(note,velocity)
+        private Sf2Region[] regions;
+
         public Sf2Instrument(SoundFont.Instrument inst, int sampleRate)
             : base()
         {
             this.SampleRate = sampleRate;
             this.Name = inst.Name;
-            loadStream(inst);
+            loadFromInstrument(inst);
         }
         public override void enforceSampleRate(int sampleRate)
         {
-            throw new NotImplementedException();
+            for (int x = 0; x < regions.Length; x++)
+                regions[x].enforceSampleRate(this.SampleRate, sampleRate);
+            this.SampleRate = sampleRate;
         }
         public override bool allSamplesSupportDualChannel()
         {
             return false;
         }
-        private void loadStream(SoundFont.Instrument inst)
+        private void loadFromInstrument(SoundFont.Instrument inst)
         {
-            //Parse Zone Data
+            Sf2Region globalRegion;
+            List<Sf2Region> regions = new List<Sf2Region>();
+            //Parse Zone Data into Regions (strips unused parameters and puts others into format usable by this synth)
             for(int x=0;x<inst.Zones.Length;x++)
             {
                 if (inst.Zones[x].Generators.Length > 0)
                 {
                     //if the last generator isn't an instrument generator this is a global zone
-                    if (inst.Zones[x].Generators[inst.Zones[x].Generators.Length - 1].GeneratorType != SoundFont.GeneratorEnum.Instrument)
+                    if (x == 0 && inst.Zones[x].Generators[inst.Zones[x].Generators.Length - 1].GeneratorType != SoundFont.GeneratorEnum.SampleID)
                     {
-
+                        globalRegion = ZoneToRegion(inst.Zones[x]);
                     }
                     else
                     {
-
+                        regions.Add(ZoneToRegion(inst.Zones[x]));
                     }
                 }
             }
-            
+            this.regions = regions.ToArray();
         }
         private Sf2Region ZoneToRegion(SoundFont.Zone zone)
         {
@@ -64,10 +70,16 @@ namespace CSharpSynth.Banks.Sf2
                     case SoundFont.GeneratorEnum.DelayVolumeEnvelope:
                         sfRegion.Delay = SynthHelper.getSampleFromTime(this.SampleRate, (float)Math.Pow(2, zone.Generators[x].Int16Amount / 1200.0));
                         break;
-                    case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeDecay:
-
+                    case SoundFont.GeneratorEnum.SustainVolumeEnvelope:
+                        if(zone.Generators[x].Int16Amount <= 0)
+                            sfRegion.sustainVolEnv = 1.0f;
+                        else
+                            sfRegion.sustainVolEnv = SynthHelper.dBtoLinear((zone.Generators[x].Int16Amount / 10.0));
+                        sfRegion.sustainVolEnv = SynthHelper.Clamp(sfRegion.sustainVolEnv, 0.0f, 1.0f);
                         break;
-                    case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeHold:
+                    case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeDecay: //finish this !!
+                        break;
+                    case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeHold: //finish this !!
                         break;
                     case SoundFont.GeneratorEnum.StartAddressOffset:
                         sfRegion.startAddrsOffset = zone.Generators[x].Int16Amount;
@@ -120,16 +132,37 @@ namespace CSharpSynth.Banks.Sf2
                         sfRegion.velocity = zone.Generators[x].Int16Amount;
                         break;
                     case SoundFont.GeneratorEnum.KeyRange:
-                        sfRegion.lowKey = zone.Generators[x].HighByteAmount;
-                        sfRegion.highKey = zone.Generators[x].LowByteAmount;
+                        sfRegion.lowKey = zone.Generators[x].LowByteAmount;
+                        sfRegion.highKey = zone.Generators[x].HighByteAmount;
                         break;
                     case SoundFont.GeneratorEnum.VelocityRange:
-                        sfRegion.lowVel = zone.Generators[x].HighByteAmount;
-                        sfRegion.highVel = zone.Generators[x].LowByteAmount;
+                        sfRegion.lowVel = zone.Generators[x].LowByteAmount;
+                        sfRegion.highVel = zone.Generators[x].HighByteAmount;
+                        break;
+                    case SoundFont.GeneratorEnum.SampleModes:
+                        sfRegion.loopMode = zone.Generators[x].Int16Amount;
+                        break;
+                    case SoundFont.GeneratorEnum.SampleID:
+                        sfRegion.sampleID = zone.Generators[x].Int16Amount;
+                        break;
+                    default:
                         break;
                 }
             }
             return sfRegion;
         }      
+        private void setupNotemap()
+        {
+            for (int x = 0; x < regions.Length; x++)
+            {
+                for (int n = regions[x].lowKey; n <= regions[x].highKey; n++)
+                {
+                    for (int v = regions[x].lowVel; v <= regions[x].highVel; v++)
+                    {
+                        noteMap[n, v] = x;
+                    }
+                }
+            }
+        }
     }
 }
