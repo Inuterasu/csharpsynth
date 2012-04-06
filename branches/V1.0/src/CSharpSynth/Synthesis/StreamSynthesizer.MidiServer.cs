@@ -70,7 +70,7 @@ namespace CSharpSynth.Synthesis
                                 NoteOffAll(true);
                                 break;
                             case 0x07: //Channel Volume
-                                volPositions_[channel] = MidiHelper.GetLogarithmicVolume(shortMessage.data2);
+                                volPositions_[channel] = shortMessage.data2 / 127.0f;
                                 break;
                             case 0x0A: //Pan
                                 panPositions_[channel] = (shortMessage.data2 - 64) == 63 ? 1.00f : (shortMessage.data2 - 64) / 64.0f;
@@ -150,7 +150,7 @@ namespace CSharpSynth.Synthesis
                                 NoteOffAll(true);
                                 break;
                             case MidiHelper.ControllerType.MainVolume:
-                                volPositions_[midiEvent.channel] = MidiHelper.GetLogarithmicVolume(midiEvent.parameter2);
+                                volPositions_[midiEvent.channel] = midiEvent.parameter2 / 127f;
                                 break;
                             case MidiHelper.ControllerType.Pan:
                                 panPositions_[midiEvent.channel] = (midiEvent.parameter2 - 64) == 63 ? 1.00f : (midiEvent.parameter2 - 64) / 64.0f;

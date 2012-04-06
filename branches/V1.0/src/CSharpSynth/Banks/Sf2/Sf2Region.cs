@@ -32,6 +32,8 @@ namespace CSharpSynth.Banks.Sf2
         public int highKey = 127;
         public int lowVel = 0;
         public int highVel = 127;
+        public int loopMode = 0; //sampleModes
+        public int sampleID = 0;
 
         public bool isInRegion(int note, int velocity)
         {
