@@ -20,8 +20,8 @@ namespace CSharpSynth.Synthesis
         private StreamSynthesizer synth;
         private double time;
         private float fadeMultiplier;
-        private float sustainGain = .2f;
-        private float attackGain = .4f;
+        private float sustainGain = .3f;
+        private float attackGain = .35f;
         //generators
         private double vibrafreq = 8;
         private double vibratime;

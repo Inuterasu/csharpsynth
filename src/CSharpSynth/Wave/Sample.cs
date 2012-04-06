@@ -14,7 +14,7 @@ namespace CSharpSynth.Wave
         public Sample(string filename)
         {
             if (PlatformHelper.FileExists(filename) == false)
-                throw new System.IO.FileNotFoundException("Sample not found: " + Path.GetFileNameWithoutExtension(filename));
+                throw new FileNotFoundException("Sample not found: " + Path.GetFileNameWithoutExtension(filename));
             name = Path.GetFileNameWithoutExtension(filename);
             WaveFileReader WaveReader = new WaveFileReader(filename);
             IChunk[] chunks = WaveReader.ReadAllChunks();
@@ -86,13 +86,13 @@ namespace CSharpSynth.Wave
         {
             get { return data.GetLength(1); }
         }
-        public float getSample(int channel, int sample)
+        public float getSample(int channel, int index)
         {
-            return data[channel, sample];
+            return data[channel, index];
         }
-        public void setSample(int channel, int sample, float value)
+        public void setSample(int channel, int index, float value)
         {
-            data[channel, sample] = value;
+            data[channel, index] = value;
         }
         public float[,] getAllSampleData()
         {
