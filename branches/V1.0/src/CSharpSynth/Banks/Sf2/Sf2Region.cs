@@ -10,8 +10,8 @@ namespace CSharpSynth.Banks.Sf2
         public int Decay;     //Samples decayVolEnv
         public int Delay;     //Samples delayVolEnv
         public float sustainVolEnv = 0.0f;
-        public int keynumToVolEnvHold = 0;
-        public int keynumToVolEnvDecay = 0;
+        public float keynumToVolEnvHold = 0;
+        public float keynumToVolEnvDecay = 0;
         //
         public int startAddrsOffset = 0;
         public int endAddrsOffset = 0;
@@ -33,7 +33,7 @@ namespace CSharpSynth.Banks.Sf2
         public int lowVel = 0;
         public int highVel = 127;
         public int loopMode = 0; //sampleModes
-        public int sampleID = 0;
+        public int sampleID = -1;
 
         public bool isInRegion(int note, int velocity)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using CSharpSynth.Synthesis;
 using System.Collections.Generic;
+using CSharpSynth.Wave;
 
 namespace CSharpSynth.Banks.Sf2
 {
@@ -42,7 +43,8 @@ namespace CSharpSynth.Banks.Sf2
                     }
                     else
                     {
-                        regions.Add(ZoneToRegion(inst.Zones[x]));
+                        Sf2Region r = ZoneToRegion(inst.Zones[x]);
+                        regions.Add(r);
                     }
                 }
             }
@@ -78,8 +80,10 @@ namespace CSharpSynth.Banks.Sf2
                         sfRegion.sustainVolEnv = SynthHelper.Clamp(sfRegion.sustainVolEnv, 0.0f, 1.0f);
                         break;
                     case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeDecay: //finish this !!
+                        sfRegion.keynumToVolEnvDecay = 0;
                         break;
                     case SoundFont.GeneratorEnum.KeyNumberToVolumeEnvelopeHold: //finish this !!
+                        sfRegion.keynumToVolEnvDecay = 0;
                         break;
                     case SoundFont.GeneratorEnum.StartAddressOffset:
                         sfRegion.startAddrsOffset = zone.Generators[x].Int16Amount;
@@ -117,7 +121,7 @@ namespace CSharpSynth.Banks.Sf2
                         sfRegion.coarseTune = zone.Generators[x].Int16Amount;
                         break;
                     case SoundFont.GeneratorEnum.FineTune:
-                        sfRegion.coarseTune = (zone.Generators[x].Int16Amount / 100f);
+                        sfRegion.fineTune = (zone.Generators[x].Int16Amount / 100f);
                         break;
                     case SoundFont.GeneratorEnum.ScaleTuning:
                         sfRegion.scaleTuning = (zone.Generators[x].Int16Amount / 100f);

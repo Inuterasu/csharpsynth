@@ -52,7 +52,7 @@ namespace CSharpSynth.Wave.DSP
         public float ApplyFilter(int channel, float sample)
         {
             for (int x = 0; x < buffer.Length - 1; x++)
-            {
+            {//shift down
                 buffer[channel, x] = buffer[channel, x + 1];
             }
             buffer[channel, buffersize - 1] = sample;
