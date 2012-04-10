@@ -44,7 +44,7 @@ namespace CSharpSynth.Banks.Fm
             : base()
         {
             this.SampleRate = sampleRate;
-            //Proper calculation of voice states
+            //Calculation of default voice states
             _attack = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_ATTACK);
             _release = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_RELEASE);
             _decay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
@@ -63,12 +63,13 @@ namespace CSharpSynth.Banks.Fm
         {
             if (sampleRate != this.SampleRate)
             {
+                float factor = sampleRate / (float)this.SampleRate;
                 //Proper calculation of voice states
-                _attack = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_ATTACK);
-                _release = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_RELEASE);
-                _decay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
-                _hold = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_HOLD);
-                _delay = SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DELAY);
+                _attack = (int)(_attack * factor);
+                _release = (int)(_release * factor);
+                _decay = (int)(_decay * factor);
+                _hold = (int)(_hold * factor);
+                _delay = (int)(_delay * factor);
                 this.SampleRate = sampleRate;
             }
         }
@@ -112,34 +113,39 @@ namespace CSharpSynth.Banks.Fm
             double timeC = time;
             double delta = (1.0 / freq); //Position in wave form in 2PI * (time* frequency)
             timeM = time % delta;
-
+            //timeC = time % delta;
             double c1 = mfreq.inputSelect == 0 ? freq : SynthHelper.DEFAULT_AMPLITUDE;
-            double c2 = mfreq.inputSelect == 1 ? SynthHelper.DEFAULT_AMPLITUDE : freq; 
+            double c2 = mfreq.inputSelect == 1 ? SynthHelper.DEFAULT_AMPLITUDE : freq;
+            c1 = mfreq.doProcess(c1);
+            c2 = mamp.doProcess(c2);
+
+            delta = (1.0 / c1);
+            timeC = timeC % delta;
 
             //modulation
             switch (modWaveType)
             {
                 case SynthHelper.WaveFormType.Sine:
-                    freq += (SynthHelper.Sine(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
+                    freq += (SynthHelper.Sine(c1, timeC) * c2);
                     break;
                 case SynthHelper.WaveFormType.Sawtooth:
-                    freq += (SynthHelper.Sawtooth(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
+                    freq += (SynthHelper.Sawtooth(c1, timeC) * c2);
                     break;
                 case SynthHelper.WaveFormType.Square:
-                    freq += (SynthHelper.Square(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
+                    freq += (SynthHelper.Square(c1, timeC) * c2);
                     break;
                 case SynthHelper.WaveFormType.Triangle:
-                    freq += (SynthHelper.Triangle(mfreq.doProcess(c1), timeC) * mamp.doProcess(c2));
+                    freq += (SynthHelper.Triangle(c1, timeC) * c2);
                     break;
                 case SynthHelper.WaveFormType.WhiteNoise:
-                    freq += (SynthHelper.WhiteNoise(0, timeC) * mamp.doProcess(c2));
+                    freq += (SynthHelper.WhiteNoise(0, timeC) * c2);
                     break;
                 default:
                     break;
             }
 
-            delta = (1.0 / freq);      //Position in wave form in 2PI * (time* frequency)
-            timeC = time % delta;
+            //delta = (1.0 / freq);      //Position in wave form in 2PI * (time* frequency)
+            //timeC = time % delta;
 
             //carrier
             switch (baseWaveType)
@@ -170,7 +176,7 @@ namespace CSharpSynth.Banks.Fm
             if (args.Length < 4)
             {
                 reader.Close();
-                throw new Exception("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing: WaveForm");
             }
             this.baseWaveType = SynthHelper.getTypeFromString(args[0]);
             this.modWaveType = SynthHelper.getTypeFromString(args[1]);
@@ -180,7 +186,7 @@ namespace CSharpSynth.Banks.Fm
             if (args.Length < 3)
             {
                 reader.Close();
-                throw new Exception("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing: Time");
             }
             if (int.Parse(args[0]) == 0)
                 looping = true;
@@ -190,7 +196,7 @@ namespace CSharpSynth.Banks.Fm
             if (args.Length < 3)
             {
                 reader.Close();
-                throw new Exception("Invalid Program file: Parameters are missing");
+                throw new Exception("Invalid Program file: Parameters are missing: Envelope");
             }
             switch (args[0].ToLower().Trim())
             {
@@ -209,6 +215,27 @@ namespace CSharpSynth.Banks.Fm
                     break;
             }
             env.Peak = double.Parse(args[1]);
+            args = reader.ReadLine().Split(new string[] { "|" }, StringSplitOptions.None);
+            if (args.Length < 5)
+            {
+                reader.Close();
+                throw new Exception("Invalid Program file: Parameters are missing: ADSR parameters");
+            }
+            float value = float.Parse(args[0]);
+            if (value >= 0.0f)
+                _attack = SynthHelper.getSampleFromTime(this.SampleRate, value);
+            value = float.Parse(args[1]);
+            if (value >= 0.0f)
+                _release = SynthHelper.getSampleFromTime(this.SampleRate, value);
+            value = float.Parse(args[2]);
+            if (value >= 0.0f)
+                _decay = SynthHelper.getSampleFromTime(this.SampleRate, value);
+            value = float.Parse(args[3]);
+            if (value >= 0.0f)
+                _hold = SynthHelper.getSampleFromTime(this.SampleRate, value);
+            value = float.Parse(args[4]);
+            if (value >= 0.0f)
+                _delay = SynthHelper.getSampleFromTime(this.SampleRate, value);
             reader.Close();
         }
         private IFMComponent getOpsAndValues(string arg, bool isFrequencyFunction)

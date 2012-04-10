@@ -83,8 +83,8 @@ namespace CSharpSynth.Banks.Analog
         {
             double freq = SynthHelper.NoteToFrequency(note);
             double delta = (1.0 / freq); //Position in wave form in 2PI * (time* frequency)
-            if (time >= delta)           //Waveform repeates at 1.0 / freq
-                time = time % delta;
+            //if (time >= delta)         //Waveform repeates at 1.0 / freq
+            time = time % delta;
             switch (type)
             {
                 case SynthHelper.WaveFormType.Sine:

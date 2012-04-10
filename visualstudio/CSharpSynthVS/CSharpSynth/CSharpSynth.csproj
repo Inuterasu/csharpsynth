@@ -218,6 +218,9 @@
     <Compile Include="..\..\..\src\CSharpSynth\Wave\DataChunk.cs">
       <Link>Wave\DataChunk.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\BiQuadHighPass.cs">
+      <Link>Wave\DSP\BiQuadHighPass.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\BiQuadLowPass.cs">
       <Link>Wave\DSP\BiQuadLowPass.cs</Link>
     </Compile>

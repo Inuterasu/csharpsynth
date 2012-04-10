@@ -14,7 +14,7 @@ namespace CSharpSynth.Synthesis
         public const double STARTING_FREQUENCY = 8.1757989156;
         public const double DOUBLE_PI = Math.PI * 2.0;
         public const float DEFAULT_AMPLITUDE = .25f;
-        public enum WaveFormType { None = -1, Sine = 0, Sawtooth = 1, Square = 2, Triangle = 3, WhiteNoise = 4 }
+        public enum WaveFormType { None, Sine, Cosine, Sawtooth, Pulse, Square, Triangle, WhiteNoise }
         //--Private Static
         private static Random rnd = new Random();
         private static String[] noteString = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
@@ -47,27 +47,6 @@ namespace CSharpSynth.Synthesis
                 return max;
             return value;
         }
-        //--WaveForm Methods
-        public static float Sine(double frequency, double time)
-        {
-            return (float)Math.Sin(frequency * time * DOUBLE_PI);
-        }
-        public static float Square(double frequency, double time)
-        {
-            return Sine(frequency, time) >= 0.0f ? 1.0f : -1.0f;
-        }
-        public static float Sawtooth(double frequency, double time)
-        {
-            return (float)(2.0 * (time * frequency - Math.Floor(time * frequency + 0.5)));
-        }
-        public static float Triangle(double frequency, double time)
-        {
-            return Math.Abs(Sawtooth(frequency, time)) * 2.0f - 1.0f;
-        }
-        public static float WhiteNoise(int note, double time)
-        {
-            return (float)(SynthHelper.getRandom() - (SynthHelper.getRandom()));
-        }
         public static double NoteToFrequency(double note)
         {
             return Math.Pow(2.0, note / 12.0) * STARTING_FREQUENCY;
@@ -92,7 +71,7 @@ namespace CSharpSynth.Synthesis
                 value = int.Parse(note.Substring(1));
             }
             value *= 12;
-            return value + (12 + Array.IndexOf(noteString,noteLetter));
+            return value + (12 + Array.IndexOf(noteString, noteLetter));
         }
         public static float dBtoLinear(double dBvalue)
         {
@@ -107,18 +86,51 @@ namespace CSharpSynth.Synthesis
             switch (wavetype.Trim().ToLower())
             {
                 case "sine":
-                    return SynthHelper.WaveFormType.Sine;
+                    return WaveFormType.Sine;
+                case "cosine":
+                    return WaveFormType.Cosine;
                 case "sawtooth":
-                    return SynthHelper.WaveFormType.Sawtooth;
+                    return WaveFormType.Sawtooth;
                 case "square":
-                    return SynthHelper.WaveFormType.Square;
+                    return WaveFormType.Square;
+                case "pulse":
+                    return WaveFormType.Pulse;
                 case "triangle":
-                    return SynthHelper.WaveFormType.Triangle;
+                    return WaveFormType.Triangle;
                 case "whitenoise":
-                    return SynthHelper.WaveFormType.WhiteNoise;
+                    return WaveFormType.WhiteNoise;
                 default://no sound
-                    return SynthHelper.WaveFormType.None;
+                    return WaveFormType.None;
             }
+        }
+        //--WaveForm Methods
+        public static float Cosine(double frequency, double time)
+        {
+            return (float)Math.Cos(frequency * time * DOUBLE_PI);
+        }
+        public static float Sine(double frequency, double time)
+        {
+            return (float)Math.Sin(frequency * time * DOUBLE_PI);
+        }
+        public static float Square(double frequency, double time)
+        { //square is pulse with 50% cycle
+            return (frequency * time) % 1.0 <= .5 ? 1f : -1f;
+        }
+        public static float Sawtooth(double frequency, double time)
+        {
+            return (float)(2.0 * (time * frequency - Math.Floor(time * frequency + 0.5)));
+        }
+        public static float Triangle(double frequency, double time)
+        {
+            return Math.Abs(Sawtooth(frequency, time)) * 2.0f - 1.0f;
+        }
+        public static float WhiteNoise(int note, double time)
+        {
+            return (float)((SynthHelper.getRandom() * 2.0) - 1.0);
+        }
+        public static float Pulse(double frequency, double period, float low, float high, double time)
+        {
+            return (frequency * time) % 1.0 <= period ? high : low;
         }
     }
 }

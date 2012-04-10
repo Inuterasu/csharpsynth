@@ -46,15 +46,19 @@ namespace CSharpSynth.Wave
             originalRate = sampleRate;
             name = "";
         }
+        public Sample(string name, int sampleRate, float[,] data)
+        {
+            this.data = data;
+            this.sampleRate = sampleRate;
+            this.originalRate = sampleRate;
+            this.name = name;
+        }
         public override bool Equals(object obj)
         {
-            if (obj.GetType() == typeof(Sample))
-            {
-                Sample s = (Sample)obj;
-                if (this.name.Equals(s.name) && (this.SamplesPerChannel == s.SamplesPerChannel) 
-                    && (this.NumberofChannels == s.NumberofChannels) && (this.sampleRate == s.sampleRate))
-                    return true;
-            }
+            Sample s = obj as Sample;
+            if (s != null && this.name.Equals(s.name) && (this.SamplesPerChannel == s.SamplesPerChannel)
+                && (this.NumberofChannels == s.NumberofChannels) && (this.sampleRate == s.sampleRate))
+                return true;
             return false;
         }
         public override int GetHashCode()

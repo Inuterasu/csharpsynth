@@ -1,19 +1,15 @@
-﻿//Filter from: http://www.musicdsp.org
-//BiQuad lowpass filter by Robert Bristow-Johnson
-//link1:http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt
-//link2:http://www.musicdsp.org/archive.php?classid=3
-using System;
+﻿using System;
 
 namespace CSharpSynth.Wave.DSP
 {
-    public class BiQuadLowPass
+    public class BiQuadHighPass
     {
-        //--Variables
+         //--Variables
         private float[,] temps;
         private float b0da0, b1da0, b2da0, a1da0, a2da0; 
         private int channels;
         //--Public Methods
-        public BiQuadLowPass(float sampleRate, int channels, float cornerfrequency)
+        public BiQuadHighPass(float sampleRate, int channels, float cornerfrequency)
         {
             this.channels = channels;
             temps = new float[channels, 2];
@@ -25,9 +21,9 @@ namespace CSharpSynth.Wave.DSP
             double cosw0 = Math.Cos(w0);
             double alpha = Math.Sin(w0) / (2.0 * Q);
             double a0, a1, a2, b0, b1, b2;
-            b0 = ((1.0 - cosw0) / 2.0);
-            b1 = (1.0 - cosw0);
-            b2 = ((1.0 - cosw0) / 2.0);
+            b0 = ((1.0 + cosw0) / 2.0);
+            b1 = (-1.0 - cosw0);
+            b2 = ((1.0 + cosw0) / 2.0);
             a0 = (1.0 + alpha);
             a1 = (-2.0 * cosw0);
             a2 = (1.0 - alpha);
@@ -69,12 +65,12 @@ namespace CSharpSynth.Wave.DSP
             double cosw0 = Math.Cos(w0);
             double alpha = Math.Sin(w0) / (2 * Q);
             double b0, b1, b2, a0, a1, a2;
-            b0 = (1 - cosw0) / 2;
-            b1 = 1 - cosw0;
-            b2 = (1 - cosw0) / 2;
-            a0 = 1 + alpha;
-            a1 = -2 * cosw0;
-            a2 = 1 - alpha;
+            b0 = ((1.0 + cosw0) / 2.0);
+            b1 = (-1.0 - cosw0);
+            b2 = ((1.0 + cosw0) / 2.0);
+            a0 = (1.0 + alpha);
+            a1 = (-2.0 * cosw0);
+            a2 = (1.0 - alpha);
             double b0da0, b1da0, b2da0, a1da0, a2da0; 
             b0da0 = (b0 / a0);
             b1da0 = (b1 / a0);
