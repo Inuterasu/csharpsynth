@@ -54,8 +54,7 @@ namespace CSharpSynth.Banks.Sfz
             //Enforce SampleRate on Parameters
             for (int x = 0; x < regions.Length; x++)
             {
-                Sample s = base.SampleList[regions[x].SampleIndex];
-                float factor = (sampleRate / this.SampleRate);
+                float factor = (sampleRate / (float)this.SampleRate);
                 regions[x].LoopEnd = (int)(regions[x].LoopEnd * factor);
                 regions[x].LoopStart = (int)(regions[x].LoopStart * factor);
                 regions[x].Offset = (int)(regions[x].Offset * factor);
@@ -490,6 +489,11 @@ namespace CSharpSynth.Banks.Sfz
                     s.SampleRate = this.SampleRate;
                 }
             }
+            //for (int x = 0; x < regions.Length; x++)
+            //{
+            //    if (regions[x].LoopEnd >= base.SampleList[regions[x].SampleIndex].SamplesPerChannel)
+            //        regions[x].LoopEnd = base.SampleList[regions[x].SampleIndex].SamplesPerChannel - 1;
+            //}
         }
         private void CreateKeyMap()
         {

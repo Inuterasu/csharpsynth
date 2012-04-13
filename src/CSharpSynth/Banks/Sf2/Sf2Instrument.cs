@@ -53,6 +53,7 @@ namespace CSharpSynth.Banks.Sf2
         private Sf2Region ZoneToRegion(SoundFont.Zone zone)
         {
             Sf2Region sfRegion = new Sf2Region(this.SampleRate);
+            SoundFont.SampleHeader shead = null;
             for (int x = 0; x < zone.Generators.Length; x++)
             {
                 switch(zone.Generators[x].GeneratorType)
@@ -148,11 +149,23 @@ namespace CSharpSynth.Banks.Sf2
                         break;
                     case SoundFont.GeneratorEnum.SampleID:
                         sfRegion.sampleID = zone.Generators[x].Int16Amount;
+                        shead = zone.Generators[x].SampleHeader;
                         break;
                     default:
                         break;
                 }
             }
+            if (shead != null)
+            {
+                if(sfRegion.overridingRootKey == -1)
+                    sfRegion.overridingRootKey = shead.OriginalPitch;
+                sfRegion.startIndex = (int)shead.Start;
+                sfRegion.endIndex = (int)shead.End;
+                sfRegion.loopstartIndex = (int)shead.StartLoop;
+                sfRegion.loopendIndex = (int)shead.EndLoop;
+                sfRegion.fineTune += shead.PitchCorrection / 100.0f;
+            }
+
             return sfRegion;
         }      
         private void setupNotemap()
