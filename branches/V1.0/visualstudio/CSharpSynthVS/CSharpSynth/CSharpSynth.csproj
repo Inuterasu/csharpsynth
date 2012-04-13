@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;VISUALSTUDIO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -223,6 +223,9 @@
     </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\BiQuadLowPass.cs">
       <Link>Wave\DSP\BiQuadLowPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\ShiftArray.cs">
+      <Link>Wave\DSP\ShiftArray.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\CSharpSynth\Wave\DSP\SincLowPass.cs">
       <Link>Wave\DSP\SincLowPass.cs</Link>

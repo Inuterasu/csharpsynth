@@ -12,7 +12,10 @@ namespace CSharpSynth.Banks.Sf2
         public float sustainVolEnv = 0.0f;
         public float keynumToVolEnvHold = 0;
         public float keynumToVolEnvDecay = 0;
-        //
+        public int startIndex = 0;
+        public int endIndex = 0;
+        public int loopstartIndex = 0;
+        public int loopendIndex = 0;
         public int startAddrsOffset = 0;
         public int endAddrsOffset = 0;
         public int startloopAddrsOffset = 0;
@@ -57,6 +60,8 @@ namespace CSharpSynth.Banks.Sf2
             Delay = (int)(Delay * diff);
             keynumToVolEnvHold = (int)(keynumToVolEnvHold * diff);
             keynumToVolEnvDecay = (int)(keynumToVolEnvDecay * diff);
+            startIndex = (int)(startIndex * diff);
+            endIndex = (int)(endIndex * diff);
             startAddrsOffset = (int)(startAddrsOffset * diff);
             endAddrsOffset = (int)(endAddrsOffset * diff);
             startloopAddrsOffset = (int)(startloopAddrsOffset * diff);

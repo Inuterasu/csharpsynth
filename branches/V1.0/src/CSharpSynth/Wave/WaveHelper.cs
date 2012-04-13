@@ -9,61 +9,51 @@ namespace CSharpSynth.Wave
         public enum WaveChunkType { Master = 1, Format = 2, Fact = 3, Data = 4 };
         public enum Format_Code { WAVE_FORMAT_PCM = 1, WAVE_FORMAT_IEEE_FLOAT = 3, WAVE_FORMAT_ALAW = 6, WAVE_FORMAT_MULAW = 7, WAVE_FORMAT_EXTENSIBLE = 65534 };
         public enum ChannelType { Mono = -1, Left = 0, Right = 1, Center = 2, Surround = 3, FrontLeft = 4, BackLeft = 5, FrontRight = 6, BackRight = 7, Unknown = 8 };
-        //--Public Static Methods
+        //--Public Static Methods        
         public static float[,] ReSample(int NewRate, int OldRate, float[,] data)
         {
             if (NewRate == OldRate)
                 return data;
             int a = NewRate, b = OldRate, r;
-            //finds the biggest factor between the rates
+            //find the biggest factor between the rates
             while (b != 0)
             {
                 r = a % b;
                 a = b;
                 b = r;
             }
-            NewRate = NewRate / a;
-            OldRate = OldRate / a;
+            //Downsample Code
             if (NewRate < OldRate) //DownSample
             {
                 if (OldRate % NewRate == 0) //Simple DownSample
                 {
-                    data = BiQuadLowPass.OfflineProcess(NewRate * a, (NewRate * a) / 2.0, 1, data);
+                    //Calculate Hertz factor
+                    double corner = (1.0 / ((OldRate / NewRate) * 2.0));
+                    data = SincLowPass.OfflineProcess(32, corner, data);
                     data = DownSample(OldRate / NewRate, data);
                 }
-                else //UpSample then DownSample
+                else //Complex DownSample
                 {
-                    data = UpSample(NewRate, data);
-                    //filter here
-                    double upCutOff = (OldRate * a) / 2.0;
-                    double downCutOff = (NewRate * a) / 2.0;
-                    if (upCutOff <= downCutOff)
-                        data = BiQuadLowPass.OfflineProcess(NewRate * a, upCutOff, 1, data);
-                    else
-                        data = BiQuadLowPass.OfflineProcess(NewRate * a, downCutOff, 1, data);
-
-                    data = DownSample(OldRate, data);
+                    data = UpSample(NewRate / a, data);
+                    data = DownSample(OldRate / a, data);
+                    //throw new Exception("Complex SampleRate Conversion Not Supported");
                 }
             }
+            //Upsample Code
             else if (NewRate > OldRate) //UpSample
             {
                 if (NewRate % OldRate == 0) //Simple UpSample
                 {
+                    //Calculate Hertz factor
+                    double corner = (1.0 / ((NewRate / OldRate) * 2.0));
                     data = UpSample(NewRate / OldRate, data);
-                    data = BiQuadLowPass.OfflineProcess(NewRate * a, (OldRate * a) / 2.0, 1, data);
+                    data = SincLowPass.OfflineProcess(32, corner, data);
                 }
-                else //UpSample then DownSample
+                else //Complex Upsample
                 {
-                    data = UpSample(NewRate, data);
-                    //filter here
-                    double upCutOff = (OldRate * a) / 2.0;
-                    double downCutOff = (NewRate * a) / 2.0;
-                    if (upCutOff <= downCutOff)
-                        data = BiQuadLowPass.OfflineProcess(NewRate * a, upCutOff, 1, data);
-                    else
-                        data = BiQuadLowPass.OfflineProcess(NewRate * a, downCutOff, 1, data);
-
-                    data = DownSample(OldRate, data);
+                    data = UpSample(NewRate / a, data);
+                    data = DownSample(OldRate / a, data);
+                    //throw new Exception("Complex SampleRate Conversion Not Supported");
                 }
             }
             return data;
@@ -73,7 +63,7 @@ namespace CSharpSynth.Wave
             if (factor == 1)
                 return data;
             int oldLen = data.GetLength(1);
-            int newLen = (int)(oldLen * (1.00f / factor));
+            int newLen = (int)(oldLen * (1.00 / factor));
             float[,] newData = new float[data.GetLength(0), newLen];
 
             for (int x = 0; x < data.GetLength(0); x++)
