@@ -65,6 +65,27 @@ namespace CSharpSynth.Wave
         {
             return base.GetHashCode();
         }
+        public float getSample(int channel, int index)
+        {
+            return data[channel, index];
+        }
+        public void setSample(int channel, int index, float value)
+        {
+            data[channel, index] = value;
+        }
+        public float[,] getAllSampleData()
+        {
+            return data;
+        }
+        public void setAllSampleData(float[,] value)
+        {
+            data = value;
+        }
+        public int getMemoryUseage()
+        {
+            return sizeof(float) * data.GetLength(0) * data.GetLength(1);
+        }
+        //--Public Properties
         public int NumberofChannels
         {
             get { return data.GetLength(0); }
@@ -89,26 +110,6 @@ namespace CSharpSynth.Wave
         public int SamplesPerChannel
         {
             get { return data.GetLength(1); }
-        }
-        public float getSample(int channel, int index)
-        {
-            return data[channel, index];
-        }
-        public void setSample(int channel, int index, float value)
-        {
-            data[channel, index] = value;
-        }
-        public float[,] getAllSampleData()
-        {
-            return data;
-        }
-        public void setAllSampleData(float[,] value)
-        {
-            data = value;
-        }
-        public int getMemoryUseage()
-        {
-            return sizeof(float) * data.GetLength(0) * data.GetLength(1);
         }
     }
 }

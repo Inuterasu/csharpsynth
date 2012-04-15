@@ -13,7 +13,7 @@ namespace CSharpSynth.Wave
         {
             if (Path.GetExtension(filename).ToLower() != ".wav" || PlatformHelper.FileExists(filename) == false)
                 throw new IOException("Invalid wave file!");
-            BR = new System.IO.BinaryReader(PlatformHelper.StreamLoad(filename));
+            BR = new BinaryReader(PlatformHelper.StreamLoad(filename));
         }
         public IChunk[] ReadAllChunks()
         {
@@ -91,8 +91,6 @@ namespace CSharpSynth.Wave
         public void Close()
         {
             BR.Close();
-			/* There is no Dispose() available in mono project */
-            //BR.Dispose();
         }
     }
 }

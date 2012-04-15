@@ -69,7 +69,6 @@ namespace CSharpSynth.Wave.DSP
             if (size % 2 != 0)
                 size++;
             double[] filter = new double[size];
-            //double[] buffer = new double[size];
             ShiftArray buffer = new ShiftArray(size, size * 100);
             for (int x = 0; x < size; x++)
                 filter[x] = ApplyBlackmanWindow(Sinc(cornerfrequency, size, x), size, x);
@@ -90,23 +89,6 @@ namespace CSharpSynth.Wave.DSP
                     }
                     data2[c, x] = (float)sample;
                 }
-                //Array.Clear(buffer, 0, buffer.Length);
-                /*
-                for(int x = 0;x< data.GetLength(1);x++)
-                {
-                    double sample = data[c, x];
-                    for (int x2 = 0; x2 < buffer.Length - 1; x2++)
-                    {
-                        buffer[x2] = buffer[x2 + 1];
-                    }
-                    buffer[buffer.Length - 1] = sample;
-                    sample = 0.0;
-                    for (int x2 = 0; x2 < filter.Length; x2++)
-                    {
-                        sample += buffer[buffer.Length - (x2 + 1)] * filter[x2];
-                    }
-                    data2[c, x] = (float)sample;
-                }*/
                 buffer.reset();
             }
             return data2;

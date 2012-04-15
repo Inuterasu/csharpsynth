@@ -83,15 +83,44 @@ namespace CSharpSynth.Synthesis
         }
         public void Stop()
         {
+            if (ADSR.ReleaseSampleTime != 0)
+            {
+                ADSR.SustainLevel = fadeMultiplier;
+                ADSR.State = ADSR_Envelope.EnvelopeState.release;
+            }
+            else
+            {
+                ADSR.State = ADSR_Envelope.EnvelopeState.none;
+                inUse = false;
+            }
+            /*
             if (ADSR.State == ADSR_Envelope.EnvelopeState.delay)
             {
                 ADSR.State = ADSR_Envelope.EnvelopeState.none;
                 inUse = false;
             }
-            else
+            else if (ADSR.State == ADSR_Envelope.EnvelopeState.sustain)
             {
-                ADSR.State = ADSR_Envelope.EnvelopeState.release;
+                if (ADSR.ReleaseSampleTime != 0)
+                    ADSR.State = ADSR_Envelope.EnvelopeState.release;
+                else
+                {
+                    ADSR.State = ADSR_Envelope.EnvelopeState.none;
+                    inUse = false;
+                }
             }
+            else if (ADSR.State == ADSR_Envelope.EnvelopeState.attack || ADSR.State == ADSR_Envelope.EnvelopeState.decay || ADSR.State == ADSR_Envelope.EnvelopeState.hold)
+            {//if in attack or decay or hold change the sustain level for proper release calculation
+                ADSR.SustainLevel = fadeMultiplier;
+                if (ADSR.ReleaseSampleTime != 0)
+                    ADSR.State = ADSR_Envelope.EnvelopeState.release;
+                else
+                {
+                    ADSR.State = ADSR_Envelope.EnvelopeState.none;
+                    inUse = false;
+                }
+            }
+             */
         }
         public void StopImmediately()
         {
@@ -156,7 +185,7 @@ namespace CSharpSynth.Synthesis
                     {
                         float sample = inst.getSampleAtTime(note, 0, synth.SampleRate, ref time);
                         sample = sample * velocity * synth.VolPositions[channel];
-
+                        
                         workingBuffer[0, i] += (sample * fadeMultiplier * leftpan);
                         workingBuffer[1, i] += (sample * fadeMultiplier * rightpan);
                     }

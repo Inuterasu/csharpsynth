@@ -17,7 +17,7 @@ namespace CSharpSynth.Wave
         public WaveFileWriter(int sampleRate, int channels, int bitsPerSample, string filename)
         {
             FileStream fs = File.Create(Path.GetDirectoryName(filename) + "RawWaveData_1tmp");
-            BW = new System.IO.BinaryWriter(fs);
+            BW = new BinaryWriter(fs);
             ftemp = fs.Name;
             fname = filename;
             this.channels = channels;
@@ -29,11 +29,16 @@ namespace CSharpSynth.Wave
             BW.Write(buffer);
             length += buffer.Length;
         }
+        public void Write(float[,] buffer)
+        {
+            if (buffer.GetLength(0) == channels)
+            {
+                Write(WaveHelper.GetRawData(buffer, bits));
+            }
+        }
         public void Close()
         {
             BW.Close();
-			/* There is no Dispose() available in mono project */
-            //BW.Dispose();
             BinaryWriter bw2 = new BinaryWriter(File.OpenWrite(fname));
             bw2.Write((Int32)1179011410);
             bw2.Write((Int32)44 + length - 8);

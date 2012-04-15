@@ -233,6 +233,30 @@ namespace CSharpSynth.Banks.Fm
         {
             return new Envelope(new double[] { 0.0, fadeInTime, fadeInTime + fadeOutTime }, new double[] { 0.0, 1.0, 0.0 });
         }
+        public static Envelope CreateBasicExponential(double maxTime, bool decay)
+        {
+            double[] timelist = new double[101];
+            double[] valuelist = new double[101];
+            if (decay == true)
+            {
+                for (int x = 0; x < 100; x++)
+                {
+                    timelist[x] = (x / 100.0) * maxTime;
+                    valuelist[x] = Math.Pow(Math.E, ((x / 100.0) * 10.0) * -1);
+                }
+            }
+            else
+            {
+                for (int x = 0; x < 100; x++)
+                {
+                    timelist[x] = (x / 100.0) * maxTime;
+                    valuelist[x] = Math.Pow(Math.E, ((x / 100.0) * 10.0) - 10.0);
+                }
+            }
+            timelist[100] = maxTime;
+            valuelist[100] = decay == true ? 0 : 1;
+            return new Envelope(timelist, valuelist);
+        }
         public static Envelope CreateBasicConstant()
         {
             return new Envelope(new double[] { 0.0, 1.0 }, new double[] { 1.0, 1.0 });

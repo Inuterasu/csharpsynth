@@ -29,12 +29,13 @@ namespace CSharpSynth.Wave
                 {
                     //Calculate Hertz factor
                     double corner = (1.0 / ((OldRate / NewRate) * 2.0));
-                    data = SincLowPass.OfflineProcess(32, corner, data);
+                    data = BiQuadLowPass.OfflineProcessWithVolumeCorrection(corner, 1, data);//data = SincLowPass.OfflineProcess(32, corner, data);
                     data = DownSample(OldRate / NewRate, data);
                 }
                 else //Complex DownSample
                 {
                     data = UpSample(NewRate / a, data);
+                    data = BiQuadLowPass.OfflineProcessWithVolumeCorrection((1.0 / ((OldRate / a) * 2.0)), 1.0, data);
                     data = DownSample(OldRate / a, data);
                     //throw new Exception("Complex SampleRate Conversion Not Supported");
                 }
@@ -47,11 +48,12 @@ namespace CSharpSynth.Wave
                     //Calculate Hertz factor
                     double corner = (1.0 / ((NewRate / OldRate) * 2.0));
                     data = UpSample(NewRate / OldRate, data);
-                    data = SincLowPass.OfflineProcess(32, corner, data);
+                    data = BiQuadLowPass.OfflineProcessWithVolumeCorrection(corner, 1, data);//data = SincLowPass.OfflineProcess(32, corner, data);
                 }
                 else //Complex Upsample
                 {
                     data = UpSample(NewRate / a, data);
+                    data = BiQuadLowPass.OfflineProcessWithVolumeCorrection((1.0 / (4.0 * Math.PI * (NewRate / a))), 1.0, data);
                     data = DownSample(OldRate / a, data);
                     //throw new Exception("Complex SampleRate Conversion Not Supported");
                 }
@@ -98,6 +100,16 @@ namespace CSharpSynth.Wave
                 }
             }
             return newData;
+        }
+        public static void ApplyScale(float scale, float[,] data)
+        {
+            for (int x = 0; x < data.GetLength(0); x++)
+            {
+                for (int x2 = 0; x2 < data.GetLength(1); x2++)
+                {
+                    data[x, x2] *= scale;
+                }
+            }
         }
         public static void ChangeBitsPerSample(FormatChunk fmtchk, DataChunk datachk, int bitsPerSample)
         {
