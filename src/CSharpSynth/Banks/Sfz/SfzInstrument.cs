@@ -51,19 +51,6 @@ namespace CSharpSynth.Banks.Sfz
             //ParseInstrumentData(...) so for the most part this will not be needed...
             if (sampleRate == this.SampleRate)
                 return;
-            //Enforce SampleRate on Parameters
-            for (int x = 0; x < regions.Length; x++)
-            {
-                float factor = (sampleRate / (float)this.SampleRate);
-                regions[x].LoopEnd = (int)(regions[x].LoopEnd * factor);
-                regions[x].LoopStart = (int)(regions[x].LoopStart * factor);
-                regions[x].Offset = (int)(regions[x].Offset * factor);
-                regions[x].Attack = (int)(regions[x].Attack * factor);
-                regions[x].Release = (int)(regions[x].Release * factor);
-                regions[x].Decay = (int)(regions[x].Decay * factor);
-                regions[x].Hold = (int)(regions[x].Hold * factor);
-                regions[x].Delay = (int)(regions[x].Delay * factor);
-            }
             //Enforce SampleRate on Samples
             for (int x = 0; x < base.SampleList.Length; x++)
             {
@@ -74,6 +61,21 @@ namespace CSharpSynth.Banks.Sfz
                     s.setAllSampleData(WaveHelper.ReSample(sampleRate, s.SampleRate, s.getAllSampleData()));
                     s.SampleRate = sampleRate;
                 }
+            }
+            //Enforce SampleRate on Parameters
+            for (int x = 0; x < regions.Length; x++)
+            {
+                double factor = (sampleRate / (double)this.SampleRate);
+                regions[x].LoopEnd = (int)(regions[x].LoopEnd * factor);
+                if (regions[x].LoopEnd >= base.SampleList[regions[x].SampleIndex].SamplesPerChannel)
+                    regions[x].LoopEnd = base.SampleList[regions[x].SampleIndex].SamplesPerChannel - 1;
+                regions[x].LoopStart = (int)(regions[x].LoopStart * factor);
+                regions[x].Offset = (int)(regions[x].Offset * factor);
+                regions[x].Attack = (int)(regions[x].Attack * factor);
+                regions[x].Release = (int)(regions[x].Release * factor);
+                regions[x].Decay = (int)(regions[x].Decay * factor);
+                regions[x].Hold = (int)(regions[x].Hold * factor);
+                regions[x].Delay = (int)(regions[x].Delay * factor);
             }
             this.SampleRate = sampleRate;
         }
@@ -98,7 +100,7 @@ namespace CSharpSynth.Banks.Sfz
                     time = (double)r.LoopStart * (1.00 / synthSampleRate);
                 }
             }
-            return neededSample.getSample(channel, Currentsample);
+            return neededSample.getSample(channel, Currentsample);// *r.Volume;
         }
         //--Private Methods
         private void ReadFromStream(Stream InstrumentStream, string path, InstrumentBank bank)
@@ -193,7 +195,7 @@ namespace CSharpSynth.Banks.Sfz
                                                 groupValues[6] = true;
                                                 break;
                                             case "volume":
-                                                Group.Volume = float.Parse(Rvalue[1]);
+                                                Group.Volume = SynthHelper.dBtoLinear(float.Parse(Rvalue[1]));
                                                 groupValues[7] = true;
                                                 break;
                                             case "loop_mode":
@@ -337,7 +339,7 @@ namespace CSharpSynth.Banks.Sfz
                                                 r.Root = int.Parse(Rvalue[1]);
                                                 break;
                                             case "volume":
-                                                r.Volume = float.Parse(Rvalue[1]);
+                                                r.Volume = SynthHelper.dBtoLinear(float.Parse(Rvalue[1]));
                                                 break;
                                             case "loop_mode":
                                                 switch (Rvalue[1])
@@ -461,24 +463,7 @@ namespace CSharpSynth.Banks.Sfz
             }
             base.SampleList = Samples.ToArray();
             regions = Regions.ToArray();
-            //Fix parameters so enforce isn't needed
-            for (int x = 0; x < regions.Length; x++)
-            {
-                Sample s = base.SampleList[regions[x].SampleIndex];
-                float factor = (this.SampleRate / (float)s.OriginalSampleRate);
-                regions[x].LoopEnd = (int)(regions[x].LoopEnd * factor);
-                regions[x].LoopStart = (int)(regions[x].LoopStart * factor);
-                regions[x].Offset = (int)(regions[x].Offset * factor);
-                //Set loopend to end of sample if none is provided
-                if (regions[x].LoopEnd <= 0)
-                {
-                    if (this.SampleRate != s.SampleRate)
-                        regions[x].LoopEnd = (int)(base.SampleList[regions[x].SampleIndex].SamplesPerChannel * factor) - 1;
-                    else
-                        regions[x].LoopEnd = (int)(base.SampleList[regions[x].SampleIndex].SamplesPerChannel) - 1;
-                }
-            }
-            //Resample as well
+            //Resample here
             for (int x = 0; x < base.SampleList.Length; x++)
             {
                 Sample s = base.SampleList[x];
@@ -489,11 +474,24 @@ namespace CSharpSynth.Banks.Sfz
                     s.SampleRate = this.SampleRate;
                 }
             }
-            //for (int x = 0; x < regions.Length; x++)
-            //{
-            //    if (regions[x].LoopEnd >= base.SampleList[regions[x].SampleIndex].SamplesPerChannel)
-            //        regions[x].LoopEnd = base.SampleList[regions[x].SampleIndex].SamplesPerChannel - 1;
-            //}
+            //Fix parameters so enforce isn't needed
+            for (int x = 0; x < regions.Length; x++)
+            {
+                Sample s = base.SampleList[regions[x].SampleIndex];
+                double factor = (this.SampleRate / (double)s.OriginalSampleRate);
+
+                regions[x].LoopEnd = (int)(regions[x].LoopEnd * factor);
+                if (regions[x].LoopEnd >= base.SampleList[regions[x].SampleIndex].SamplesPerChannel)
+                    regions[x].LoopEnd = base.SampleList[regions[x].SampleIndex].SamplesPerChannel - 1;
+                regions[x].LoopStart = (int)(regions[x].LoopStart * factor);
+                regions[x].Offset = (int)(regions[x].Offset * factor);
+
+                //Set loopend to end of sample if none is provided
+                if (regions[x].LoopEnd <= 0)
+                {
+                    regions[x].LoopEnd = (int)(base.SampleList[regions[x].SampleIndex].SamplesPerChannel) - 1;
+                }
+            }
         }
         private void CreateKeyMap()
         {

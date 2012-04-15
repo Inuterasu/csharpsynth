@@ -18,7 +18,7 @@ using UnityEngine;
  
 namespace CSharpSynth
 {
-	public static class DBG
+	public static class PlatformDebug
 	{
 	
 #if VISUALSTUDIO || MONODEVELP || XNA

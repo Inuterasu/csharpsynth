@@ -103,7 +103,7 @@ namespace CSharpSynth.Sequencer
                 }
                 catch (Exception ex)
                 {
-                    DBG.error("Error Loading Midi:\n" + ex.Message);
+                    PlatformDebug.error("Error Loading Midi:\n" + ex.Message);
                     return false;
                 }
             }
@@ -121,7 +121,7 @@ namespace CSharpSynth.Sequencer
             }
             catch (Exception ex)
             {
-                DBG.error("Error Loading Midi:\n" + ex.Message);
+                PlatformDebug.error("Error Loading Midi:\n" + ex.Message);
                 return false;
             }
             return LoadMidi(mf, UnloadUnusedInstruments);

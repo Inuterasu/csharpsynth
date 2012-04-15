@@ -16,9 +16,11 @@ namespace CSharpSynth.Banks.Fm
         private int _decay;
         private int _hold;
         private int _delay;
+        //fm parameters
         private double start_time;
         private double end_time;
         private bool looping;
+        private double staticfrequency;
         private Envelope env;
         //modulator parameters
         private ModulatorAmplitudeFunction mamp;
@@ -106,8 +108,8 @@ namespace CSharpSynth.Banks.Fm
                     return 0.0f;
                 }
             }
-
-            double freq = SynthHelper.NoteToFrequency(note);
+            //use static note if value is set otherwise calculate note frequency
+            double freq = staticfrequency < 0.0 ? SynthHelper.NoteToFrequency(note) : staticfrequency;
 
             double timeM = time;
             double timeC = time;
@@ -173,7 +175,7 @@ namespace CSharpSynth.Banks.Fm
                 throw new Exception("Invalid Program file: Incorrect Header!");
             }
             string[] args = reader.ReadLine().Split(new string[] { "|" }, StringSplitOptions.None);
-            if (args.Length < 4)
+            if (args.Length < 5)
             {
                 reader.Close();
                 throw new Exception("Invalid Program file: Parameters are missing: WaveForm");
@@ -182,6 +184,7 @@ namespace CSharpSynth.Banks.Fm
             this.modWaveType = SynthHelper.getTypeFromString(args[1]);
             this.mfreq = (ModulatorFrequencyFunction)getOpsAndValues(args[2], true);
             this.mamp = (ModulatorAmplitudeFunction)getOpsAndValues(args[3], false);
+            this.staticfrequency = double.Parse(args[4]);
             args = reader.ReadLine().Split(new string[] { "|" }, StringSplitOptions.None);
             if (args.Length < 3)
             {
@@ -209,6 +212,12 @@ namespace CSharpSynth.Banks.Fm
                 case "fadein&out":
                     double p = double.Parse(args[2]) / 2.0;
                     env = Envelope.CreateBasicFadeInAndOut(p, p);
+                    break;
+                case "expdecay":
+                    env = Envelope.CreateBasicExponential(double.Parse(args[2]),true);
+                    break;
+                case "expgrowth":
+                    env = Envelope.CreateBasicExponential(double.Parse(args[2]), false);
                     break;
                 default:
                     env = Envelope.CreateBasicConstant();

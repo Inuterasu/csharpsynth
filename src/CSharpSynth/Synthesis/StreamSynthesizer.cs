@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CSharpSynth.Banks;
 using CSharpSynth.Effects;
-using CSharpSynth.Midi;
 using CSharpSynth.Sequencer;
 
 namespace CSharpSynth.Synthesis
@@ -31,7 +30,7 @@ namespace CSharpSynth.Synthesis
 				
         readonly private int audioChannels = 1;
         readonly private int sampleRate = 44100;
-        readonly private int samplesperBuffer = 2000;
+        readonly private int samplesperBuffer = 2048;
 		
 		//total number of voices available
         private int polyphony = 40; 
@@ -120,28 +119,28 @@ namespace CSharpSynth.Synthesis
             {
                 sampleRate = 44100;
                 this.samplesperBuffer = (sampleRate / 1000) * 50;
-                DBG.error("-----> Invalid Sample Rate! Changed to---->" + sampleRate);
-                DBG.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
+                PlatformDebug.error("-----> Invalid Sample Rate! Changed to---->" + sampleRate);
+                PlatformDebug.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
             }
             if (polyphony < 1 || polyphony > 500)
             {
                 polyphony = 40;
-                DBG.error("-----> Invalid Max Poly! Changed to---->" + polyphony);
+                PlatformDebug.error("-----> Invalid Max Poly! Changed to---->" + polyphony);
             }
             if (maxnotepoly < 1 || maxnotepoly > polyphony)
             {
                 maxnotepoly = 2;
-                DBG.error("-----> Invalid Max Note Poly! Changed to---->" + maxnotepoly);
+                PlatformDebug.error("-----> Invalid Max Note Poly! Changed to---->" + maxnotepoly);
             }
             if (samplesperBuffer < 100 || samplesperBuffer > 500000)
             {
                 this.samplesperBuffer = (int)((sampleRate / 1000.0) * 50.0);
-                DBG.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
+                PlatformDebug.error("-----> Invalid Buffer Size! Changed to---->" + 50 + "ms");
             }
             if (audioChannels < 1 || audioChannels > 2)
             {
                 audioChannels = 1;
-                DBG.error("-----> Invalid Audio Channels! Changed to---->" + audioChannels);
+                PlatformDebug.error("-----> Invalid Audio Channels! Changed to---->" + audioChannels);
             }
 						
 			setupSynth();
@@ -156,7 +155,7 @@ namespace CSharpSynth.Synthesis
             }
             catch (Exception ex)
             {
-                DBG.error("Bank load error!\n" + ex.Message + "\n\n" + ex.StackTrace);
+                PlatformDebug.error("Bank load error!\n" + ex.Message + "\n\n" + ex.StackTrace);
                 return false;
             }
             return true;
@@ -226,7 +225,7 @@ namespace CSharpSynth.Synthesis
             //Reset vibrato
             Array.Clear(vibraPositions_, 0, vibraPositions_.Length);
             //Reset pitch wheel to 2 semitones
-            for (int x = 0; x < volPositions_.Length; x++)
+            for (int x = 0; x < pitchWheelSemitoneRange_.Length; x++)
                 pitchWheelSemitoneRange_[x] = 2.0;
             //Reset coarse select
             Array.Clear(RPC, 0, RPC.Length);

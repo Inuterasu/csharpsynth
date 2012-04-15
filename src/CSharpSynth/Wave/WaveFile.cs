@@ -33,6 +33,7 @@
             }
             return null;
         }
+        //--Public Properties
         public DataChunk Data
         {
             get { return dataChunk; }
@@ -44,6 +45,10 @@
         public byte[] SampleData
         {
             get { return dataChunk.sampled_data; }
+        }
+        public IChunk[] Chunks
+        {
+            get { return waveChunks; }
         }
         public int NumberOfChunks
         {
