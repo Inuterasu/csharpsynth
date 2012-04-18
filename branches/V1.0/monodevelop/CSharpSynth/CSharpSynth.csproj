@@ -332,6 +332,15 @@
     <Compile Include="..\..\src\CSharpSynth\Synthesis\ADSR_Envelope.cs">
       <Link>CSharpSynth\Synthesis\ADSR_Envelope.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Effects\Reverb.cs">
+      <Link>CSharpSynth\Effects\Reverb.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\DSP\BiQuadHighPass.cs">
+      <Link>CSharpSynth\Wave\DSP\BiQuadHighPass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\CSharpSynth\Wave\DSP\ShiftArray.cs">
+      <Link>CSharpSynth\Wave\DSP\ShiftArray.cs</Link>
+    </Compile>
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
