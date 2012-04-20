@@ -81,23 +81,23 @@ namespace CSharpSynth.Banks.Sfz
         }
         public override float getSampleAtTime(int note, int channel, int synthSampleRate, ref double time)
         {
-            int originalSampleRate = synthSampleRate;
             SfzRegion r = regions[noteMap[note]];
             Sample neededSample = base.SampleList[r.SampleIndex];
             //Calculate SampleRate from pitch
-            synthSampleRate = (int)(synthSampleRate * Math.Pow(2.0, ((note - r.Root) + r.Tune) / 12.0));
-            int Currentsample = (int)(time / (1.0 / synthSampleRate));
+            double modifiedRate = (synthSampleRate * Math.Pow(2.0, ((note - r.Root) + r.Tune) / 12.0));
+            int Currentsample = (int)(time * modifiedRate);//(int)(time / (1.0 / synthSampleRate));
+            
             if (Currentsample > r.LoopEnd)
             {
                 if (r.LoopMode == 0)
                 {
-                    time = time - (1.0 / originalSampleRate);
+                    //time = time - (1.0 / originalSampleRate);
                     return 0.0f;
                 }
                 else
                 {
-                    Currentsample = r.LoopStart;
-                    time = (double)r.LoopStart * (1.00 / synthSampleRate);
+                    Currentsample = r.LoopStart + (Currentsample % r.LoopEnd) -1;
+                    time = (r.LoopStart / modifiedRate);
                 }
             }
             return neededSample.getSample(channel, Currentsample);// *r.Volume;

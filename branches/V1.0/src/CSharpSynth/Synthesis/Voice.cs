@@ -93,34 +93,6 @@ namespace CSharpSynth.Synthesis
                 ADSR.State = ADSR_Envelope.EnvelopeState.none;
                 inUse = false;
             }
-            /*
-            if (ADSR.State == ADSR_Envelope.EnvelopeState.delay)
-            {
-                ADSR.State = ADSR_Envelope.EnvelopeState.none;
-                inUse = false;
-            }
-            else if (ADSR.State == ADSR_Envelope.EnvelopeState.sustain)
-            {
-                if (ADSR.ReleaseSampleTime != 0)
-                    ADSR.State = ADSR_Envelope.EnvelopeState.release;
-                else
-                {
-                    ADSR.State = ADSR_Envelope.EnvelopeState.none;
-                    inUse = false;
-                }
-            }
-            else if (ADSR.State == ADSR_Envelope.EnvelopeState.attack || ADSR.State == ADSR_Envelope.EnvelopeState.decay || ADSR.State == ADSR_Envelope.EnvelopeState.hold)
-            {//if in attack or decay or hold change the sustain level for proper release calculation
-                ADSR.SustainLevel = fadeMultiplier;
-                if (ADSR.ReleaseSampleTime != 0)
-                    ADSR.State = ADSR_Envelope.EnvelopeState.release;
-                else
-                {
-                    ADSR.State = ADSR_Envelope.EnvelopeState.none;
-                    inUse = false;
-                }
-            }
-             */
         }
         public void StopImmediately()
         {
@@ -171,17 +143,15 @@ namespace CSharpSynth.Synthesis
                     //end of state management
                     
                     //Decide how to sample based on channels available
-                    
-                    //mono output
-                    if (synth.Channels == 1)
+
+                    if (synth.Channels == 1)//mono sample to mono output
                     {
                         float sample = inst.getSampleAtTime(note, 0, synth.SampleRate, ref time);
                         sample = sample * velocity * synth.VolPositions[channel];
                         
                         workingBuffer[0, i] += (sample * fadeMultiplier);
                     }
-                    //mono sample to stereo output
-                    else
+                    else //mono sample to stereo output
                     {
                         float sample = inst.getSampleAtTime(note, 0, synth.SampleRate, ref time);
                         sample = sample * velocity * synth.VolPositions[channel];
@@ -189,10 +159,10 @@ namespace CSharpSynth.Synthesis
                         workingBuffer[0, i] += (sample * fadeMultiplier * leftpan);
                         workingBuffer[1, i] += (sample * fadeMultiplier * rightpan);
                     }
+
                     time += 1.0 / (variableSampleRate + SynthHelper.Sine(vibrafreq, vibratime) * (variableSampleRate * synth.VibratoPositions[channel]));
                     vibratime += 1.0 / variableSampleRate;
-                    if (vibratime >= 1.0 / vibrafreq)
-                        vibratime = vibratime % (1.0 / vibrafreq);
+                    vibratime = vibratime % (1.0 / vibrafreq);
                     //bailout of the loop if there is no reason to continue.
                     if (inUse == false)
                         return;

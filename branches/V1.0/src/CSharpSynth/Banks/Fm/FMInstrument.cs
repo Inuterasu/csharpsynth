@@ -26,21 +26,6 @@ namespace CSharpSynth.Banks.Fm
         private ModulatorAmplitudeFunction mamp;
         private ModulatorFrequencyFunction mfreq;
         //--Public Properties
-        public int Attack
-        {
-            get { return _attack; }
-            set { _attack = value; }
-        }
-        public int Release
-        {
-            get { return _release; }
-            set { _release = value; }
-        }
-        public SynthHelper.WaveFormType WaveForm
-        {
-            get { return baseWaveType; }
-            set { baseWaveType = value; }
-        }
         //--Public Methods
         public FMInstrument(string fmProgramFile, int sampleRate)
             : base()
@@ -101,7 +86,9 @@ namespace CSharpSynth.Banks.Fm
             if (time >= end_time)
             {
                 if (looping)
-                    time = time % start_time;
+                {
+                    time = start_time + (time % end_time);
+                }
                 else
                 {
                     time = end_time;
@@ -114,7 +101,8 @@ namespace CSharpSynth.Banks.Fm
             double timeM = time;
             double timeC = time;
             double delta = (1.0 / freq); //Position in wave form in 2PI * (time* frequency)
-            timeM = time % delta;
+            if(time >= delta)
+                timeM = time % delta;
             //timeC = time % delta;
             double c1 = mfreq.inputSelect == 0 ? freq : SynthHelper.DEFAULT_AMPLITUDE;
             double c2 = mfreq.inputSelect == 1 ? SynthHelper.DEFAULT_AMPLITUDE : freq;
@@ -122,7 +110,8 @@ namespace CSharpSynth.Banks.Fm
             c2 = mamp.doProcess(c2);
 
             delta = (1.0 / c1);
-            timeC = timeC % delta;
+            if(timeC >= delta)
+                timeC = timeC % delta;
 
             //modulation
             switch (modWaveType)
@@ -214,7 +203,7 @@ namespace CSharpSynth.Banks.Fm
                     env = Envelope.CreateBasicFadeInAndOut(p, p);
                     break;
                 case "expdecay":
-                    env = Envelope.CreateBasicExponential(double.Parse(args[2]),true);
+                    env = Envelope.CreateBasicExponential(double.Parse(args[2]), true);
                     break;
                 case "expgrowth":
                     env = Envelope.CreateBasicExponential(double.Parse(args[2]), false);

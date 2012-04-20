@@ -20,7 +20,7 @@ namespace CSharpSynth.Banks
         private int SampleRate_;
         private int SampleMemUse;
         //--Static Variables
-        public static Sample nullSample = new Sample(SynthHelper.DEFAULT_SAMPLERATE);
+        public static Sample NullSample = new Sample(SynthHelper.DEFAULT_SAMPLERATE);
         //--Public Methods
         public InstrumentBank(int sampleRate, string bankfile)
         {
@@ -220,10 +220,6 @@ namespace CSharpSynth.Banks
         {
             get { return lastbankpath; }
             set { lastbankpath = value; }
-        }
-        public static Sample DummySample
-        {
-            get { return nullSample; }
         }
         public List<string> SampleNameList
         {
