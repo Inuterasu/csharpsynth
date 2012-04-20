@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using CSharpSynth.Midi;
 using CSharpSynth.Synthesis;
 using CSharpSynth.Banks;
@@ -70,7 +71,7 @@ namespace CSharpSynth.Sequencer
             blockList = new List<byte>();
             //seqEvt = new MidiSequencerEvent();
         }
-        public bool LoadMidi(MidiFile midi, bool UnloadUnusedInstruments)
+        public bool LoadMidi(MidiFile midi)
         {
             if (playing == true)
                 return false;
@@ -110,7 +111,8 @@ namespace CSharpSynth.Sequencer
             blockList.Clear();
             return true;
         }
-        public bool LoadMidi(string file, bool UnloadUnusedInstruments)
+        
+		public bool LoadMidi(string file)
         {
             if (playing == true)
                 return false;
@@ -124,8 +126,25 @@ namespace CSharpSynth.Sequencer
                 PlatformDebug.error("Error Loading Midi:\n" + ex.Message);
                 return false;
             }
-            return LoadMidi(mf, UnloadUnusedInstruments);
+            return LoadMidi(mf);
         }
+		
+		public bool LoadMid(Stream aStream){
+			if (playing == true)
+                return false;
+            MidiFile mf = null;
+            try
+            {
+                mf = new MidiFile(aStream);
+            }
+            catch (Exception ex)
+            {
+                PlatformDebug.error("Error Loading Midi:\n" + ex.Message);
+                return false;
+            }
+            return LoadMidi(mf);
+		}
+		
         public void Play()
         {
             if (playing == true)

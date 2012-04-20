@@ -64,6 +64,20 @@ namespace CSharpSynth.Midi
                     midiStream.Close();
             }
         }
+		
+		//--Public Methods
+        public MidiFile(Stream aStream)
+        {
+            try
+            {
+                loadStream(aStream);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Midi Failed to Load!", ex);
+            }
+        }
+		
         public List<MidiEvent> getAllMidiEventsofType(MidiHelper.MidiChannelEvent eventChannelType, MidiHelper.MidiMetaEvent eventMetaType)
         {
             List<MidiEvent> matchList = new List<MidiEvent>();
