@@ -129,7 +129,7 @@ namespace CSharpSynth.Sequencer
             return LoadMidi(mf);
         }
 		
-		public bool LoadMid(Stream aStream){
+		public bool LoadMidi(Stream aStream){
 			if (playing == true)
                 return false;
             MidiFile mf = null;
