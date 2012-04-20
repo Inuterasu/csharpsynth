@@ -142,9 +142,12 @@
         {
             get { return envState; }
             set 
-            { 
-                envState = value;
-                time = 0.0f;
+            {
+                if (envState != value)
+                {
+                    envState = value;
+                    time = 0.0f;
+                }
             }
         }
         public float AttackLevel

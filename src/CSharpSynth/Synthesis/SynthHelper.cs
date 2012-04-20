@@ -5,11 +5,11 @@ namespace CSharpSynth.Synthesis
     public static class SynthHelper
     {
         //--Constants
-        public const float DEFAULT_ATTACK = .001f;           //gradually brings volume up when note starts.
-        public const float DEFAULT_RELEASE = .001f;          //gradually brings volume down when note ends.
-        public const float DEFAULT_DECAY = .005f;            //gradually brings volume down to sustain.
-        public const float DEFAULT_HOLD = .001f;             //holds volume at max attack level.
-        public const float DEFAULT_DELAY = .000f;            //time before note starts
+        public const float DEFAULT_ATTACK = .001f;            //gradually brings volume up when note starts.
+        public const float DEFAULT_RELEASE = .001f;           //gradually brings volume down when note ends.
+        public const float DEFAULT_DECAY = .005f;             //gradually brings volume down to sustain.
+        public const float DEFAULT_HOLD = .001f;              //holds volume at max attack level.
+        public const float DEFAULT_DELAY = .000f;             //time before note starts
         public const int DEFAULT_SAMPLERATE = 44100;
         public const double STARTING_FREQUENCY = 8.1757989156;
         public const double DOUBLE_PI = Math.PI * 2.0;
@@ -129,8 +129,12 @@ namespace CSharpSynth.Synthesis
             return (float)((SynthHelper.getRandom() * 2.0) - 1.0);
         }
         public static float Pulse(double frequency, double period, float low, float high, double time)
-        {
+        {//returns high or low depending on the period. A value of .5 means return low for half of the time and high for the other half.
             return (frequency * time) % 1.0 <= period ? high : low;
+        }
+        public static float SinePulse(double frequency, double time, double pulsefrequency)
+        {//Simple Pulse Width Modulation
+            return Sine(pulsefrequency, time) >= Sawtooth(frequency, time) ? 1.0f : -1.0f;
         }
     }
 }

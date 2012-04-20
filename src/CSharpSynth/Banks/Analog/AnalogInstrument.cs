@@ -11,17 +11,6 @@ namespace CSharpSynth.Banks.Analog
         private int _decay;
         private int _hold;
         private int _delay;
-        //--Public Properties
-        public int Attack
-        {
-            get { return _attack; }
-            set { _attack = value; }
-        }
-        public int Release
-        {
-            get { return _release; }
-            set { _release = value; }
-        }
         public SynthHelper.WaveFormType WaveForm
         {
             get { return type; }
@@ -83,8 +72,8 @@ namespace CSharpSynth.Banks.Analog
         {
             double freq = SynthHelper.NoteToFrequency(note);
             double delta = (1.0 / freq); //Position in wave form in 2PI * (time* frequency)
-            //if (time >= delta)         //Waveform repeates at 1.0 / freq
-            time = time % delta;
+            if (time >= delta)//Waveform repeates at 1.0 / freq         
+                time = time % delta;
             switch (type)
             {
                 case SynthHelper.WaveFormType.Sine:

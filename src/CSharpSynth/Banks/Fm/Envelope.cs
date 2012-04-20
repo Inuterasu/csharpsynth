@@ -11,7 +11,7 @@ namespace CSharpSynth.Banks.Fm
         private int arraylength = 0;
         private double maxTime = 0;
         private bool loop = true;
-        private double peak = 1;
+        private double peak = 1.0;
         //--Public Properties
         public bool Looping
         {
@@ -133,7 +133,7 @@ namespace CSharpSynth.Banks.Fm
                     return (float)(((slope * time) + b) * peak);
                 }
             }
-            return 0;
+            return 0.0f;
         }
         //--Private Methods
         private bool contains(double[] array, double value)
