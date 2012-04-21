@@ -8,7 +8,7 @@ namespace CSharpSynth.Midi
     public class MidiFile
     {
         //--Variables
-        private uint BPM = 120; //beats per minute
+        private double BPM = 120; //beats per minute
         private uint MPQN = 500000; //microseconds per 1/4 note
         private bool sequenceReadyFormat = false;
         private MidiHeader mheader;
@@ -23,13 +23,13 @@ namespace CSharpSynth.Midi
         {
             get { return tracks; }
         }
-        public uint BeatsPerMinute
+        public double BeatsPerMinute
         {
             get { return BPM; }
             set
             {
                 BPM = value;
-                MPQN = MidiHelper.MicroSecondsPerMinute / BPM;
+                MPQN = (uint)(MidiHelper.MicroSecondsPerMinute / BPM);
             }
         }
         public uint MicroSecondsPerQuarterNote
@@ -38,7 +38,7 @@ namespace CSharpSynth.Midi
             set
             {
                 MPQN = value;
-                BPM = MidiHelper.MicroSecondsPerMinute / MPQN;
+                BPM = MidiHelper.MicroSecondsPerMinute / (double)MPQN;
             }
         }
         public MidiHeader MidiHeader
@@ -131,11 +131,11 @@ namespace CSharpSynth.Midi
                 }
             }
             //Now process the midi events
-            Dictionary<uint, LinkedList<MidiEvent>> OrderedTrack = new Dictionary<uint, LinkedList<MidiEvent>>(total_eventCount);
+            Dictionary<double, LinkedList<MidiEvent>> OrderedTrack = new Dictionary<double, LinkedList<MidiEvent>>(total_eventCount);
 
             for (int x = 0; x < tracks.Length; x++)
             {
-                uint CurrentDeltaTime_ = 0;
+                double CurrentDeltaTime_ = 0;
                 MidiEvent[] TrackSeq = new MidiEvent[tracks[x].MidiEvents.Length];
                 tracks[x].MidiEvents.CopyTo(TrackSeq, 0);
                 for (int x2 = 0; x2 < tracks[x].MidiEvents.Length; x2++)
@@ -157,7 +157,7 @@ namespace CSharpSynth.Midi
                 }
             }
             //Sort the Dictionary
-            uint[] keys = new uint[OrderedTrack.Keys.Count];
+            double[] keys = new double[OrderedTrack.Keys.Count];
             OrderedTrack.Keys.CopyTo(keys, 0);
             Array.Sort(keys);
 
@@ -171,14 +171,14 @@ namespace CSharpSynth.Midi
             tracks[0].Programs = programsUsed.ToArray();
             tracks[0].DrumPrograms = DrumprogramsUsed.ToArray();
             tracks[0].MidiEvents = new MidiEvent[total_eventCount];
-            uint PreviousDeltaTime = 0;
+            double PreviousDeltaTime = 0;
             uint cc = 0;
             for (int x = 0; x < ArrayofTrkEvts.Length; x++)
             {
                 LinkedListNode<MidiEvent> tmpN = ArrayofTrkEvts[x].First;
                 while (tmpN != null)
                 {
-                    uint old1 = tmpN.Value.deltaTime;
+                    double old1 = tmpN.Value.deltaTime;
                     tmpN.Value.deltaTime = (tmpN.Value.deltaTime - PreviousDeltaTime);
                     PreviousDeltaTime = old1;
                     tracks[0].MidiEvents[cc] = tmpN.Value;
@@ -212,7 +212,7 @@ namespace CSharpSynth.Midi
             //Read header length
             stream.Read(tmp, 0, 4);
             Array.Reverse(tmp); //Reverse the bytes
-            int headerLength = BitConverter.ToInt32(tmp, 0);
+            //int headerLength = BitConverter.ToInt32(tmp, 0);
             //Read midi format
             tmp = new byte[2];
             stream.Read(tmp, 0, 2);
@@ -515,7 +515,7 @@ namespace CSharpSynth.Midi
             Array.Reverse(buff);
             data = BitConverter.ToUInt32(buff, 0);
             data >>= (32 - (numOfBytes * 8));
-            UInt32 b = data;
+            //UInt32 b = data;
             UInt32 bffr = (data & 0x7F);
             int c = 1;
             while ((data >>= 8) > 0)

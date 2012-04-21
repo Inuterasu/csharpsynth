@@ -246,85 +246,85 @@
       <Link>SoundFont\ZoneBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\ControllerSourceEnum.cs">
-      <Link>CSharpSynth\SoundFont\ControllerSourceEnum.cs</Link>
+      <Link>SoundFont\ControllerSourceEnum.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\Generator.cs">
-      <Link>CSharpSynth\SoundFont\Generator.cs</Link>
+      <Link>SoundFont\Generator.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\GeneratorBuilder.cs">
-      <Link>CSharpSynth\SoundFont\GeneratorBuilder.cs</Link>
+      <Link>SoundFont\GeneratorBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\GeneratorEnum.cs">
-      <Link>CSharpSynth\SoundFont\GeneratorEnum.cs</Link>
+      <Link>SoundFont\GeneratorEnum.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\InfoChunk.cs">
-      <Link>CSharpSynth\SoundFont\InfoChunk.cs</Link>
+      <Link>SoundFont\InfoChunk.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\Instrument.cs">
-      <Link>CSharpSynth\SoundFont\Instrument.cs</Link>
+      <Link>SoundFont\Instrument.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\InstrumentBuilder.cs">
-      <Link>CSharpSynth\SoundFont\InstrumentBuilder.cs</Link>
+      <Link>SoundFont\InstrumentBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\Modulator.cs">
-      <Link>CSharpSynth\SoundFont\Modulator.cs</Link>
+      <Link>SoundFont\Modulator.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\ModulatorBuilder.cs">
-      <Link>CSharpSynth\SoundFont\ModulatorBuilder.cs</Link>
+      <Link>SoundFont\ModulatorBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\ModulatorType.cs">
-      <Link>CSharpSynth\SoundFont\ModulatorType.cs</Link>
+      <Link>SoundFont\ModulatorType.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\Preset.cs">
-      <Link>CSharpSynth\SoundFont\Preset.cs</Link>
+      <Link>SoundFont\Preset.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\PresetBuilder.cs">
-      <Link>CSharpSynth\SoundFont\PresetBuilder.cs</Link>
+      <Link>SoundFont\PresetBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\PresetsChunk.cs">
-      <Link>CSharpSynth\SoundFont\PresetsChunk.cs</Link>
+      <Link>SoundFont\PresetsChunk.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\RiffChunk.cs">
-      <Link>CSharpSynth\SoundFont\RiffChunk.cs</Link>
+      <Link>SoundFont\RiffChunk.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SFSampleLink.cs">
-      <Link>CSharpSynth\SoundFont\SFSampleLink.cs</Link>
+      <Link>SoundFont\SFSampleLink.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SFVersion.cs">
-      <Link>CSharpSynth\SoundFont\SFVersion.cs</Link>
+      <Link>SoundFont\SFVersion.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SFVersionBuilder.cs">
-      <Link>CSharpSynth\SoundFont\SFVersionBuilder.cs</Link>
+      <Link>SoundFont\SFVersionBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SampleDataChunk.cs">
-      <Link>CSharpSynth\SoundFont\SampleDataChunk.cs</Link>
+      <Link>SoundFont\SampleDataChunk.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SampleHeader.cs">
-      <Link>CSharpSynth\SoundFont\SampleHeader.cs</Link>
+      <Link>SoundFont\SampleHeader.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SampleHeaderBuilder.cs">
-      <Link>CSharpSynth\SoundFont\SampleHeaderBuilder.cs</Link>
+      <Link>SoundFont\SampleHeaderBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SampleMode.cs">
-      <Link>CSharpSynth\SoundFont\SampleMode.cs</Link>
+      <Link>SoundFont\SampleMode.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SoundFont.cs">
-      <Link>CSharpSynth\SoundFont\SoundFont.cs</Link>
+      <Link>SoundFont\SoundFont.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\SourceTypeEnum.cs">
-      <Link>CSharpSynth\SoundFont\SourceTypeEnum.cs</Link>
+      <Link>SoundFont\SourceTypeEnum.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\StructureBuilder.cs">
-      <Link>CSharpSynth\SoundFont\StructureBuilder.cs</Link>
+      <Link>SoundFont\StructureBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\TransformEnum.cs">
-      <Link>CSharpSynth\SoundFont\TransformEnum.cs</Link>
+      <Link>SoundFont\TransformEnum.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\Zone.cs">
-      <Link>CSharpSynth\SoundFont\Zone.cs</Link>
+      <Link>SoundFont\Zone.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\SoundFont\ZoneBuilder.cs">
-      <Link>CSharpSynth\SoundFont\ZoneBuilder.cs</Link>
+      <Link>SoundFont\ZoneBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\src\CSharpSynth\Sequencer\SampleSequencer.cs">
       <Link>CSharpSynth\Sequencer\SampleSequencer.cs</Link>

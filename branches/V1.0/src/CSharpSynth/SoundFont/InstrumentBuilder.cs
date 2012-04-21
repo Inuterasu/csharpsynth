@@ -40,7 +40,7 @@
 
         public override void Write(BinaryWriter bw, object o)
         {
-            Instrument instrument = (Instrument) o;
+            //Instrument instrument = (Instrument) o;
         }
 
         public Instrument[] Instruments

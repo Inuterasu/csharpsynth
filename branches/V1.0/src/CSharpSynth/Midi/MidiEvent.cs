@@ -3,7 +3,7 @@
     public class MidiEvent
     {
         //--Variables
-        public uint deltaTime;
+        public double deltaTime;
         public MidiHelper.MidiMetaEvent midiMetaEvent;
         public MidiHelper.MidiChannelEvent midiChannelEvent;
         public object[] Parameters;

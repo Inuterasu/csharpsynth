@@ -38,7 +38,7 @@
 
         public override void Write(BinaryWriter bw, object o)
         {
-            Zone zone = (Zone) o;
+            //Zone zone = (Zone) o;
         }
 
         public override int Length

@@ -35,7 +35,7 @@
 
         public override void Write(BinaryWriter bw, object o)
         {
-            SampleHeader header = (SampleHeader) o;
+            //SampleHeader header = (SampleHeader) o;
         }
 
         public override int Length

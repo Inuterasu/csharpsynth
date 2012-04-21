@@ -45,7 +45,7 @@
 
         public override void Write(BinaryWriter bw, object o)
         {
-            Preset preset = (Preset) o;
+            //Preset preset = (Preset) o;
         }
 
         public override int Length
