@@ -80,19 +80,21 @@ namespace CSharpSynth.Sequencer
             {
                 try
                 {
-                    //Combine all tracks into 1 track that is organized from lowest to highest abs time
+                    //reset tempo
+                    _MidiFile.BeatsPerMinute = 120;
+					//Combine all tracks into 1 track that is organized from lowest to highest abs time
                     _MidiFile.CombineTracks();
                     //Convert delta time to sample time
                     eventIndex = 0;
-                    uint lastSample = 0;
+                    double lastSample = 0;
                     for (int x = 0; x < _MidiFile.Tracks[0].MidiEvents.Length; x++)
                     {
-                        _MidiFile.Tracks[0].MidiEvents[x].deltaTime = lastSample + (uint)DeltaTimetoSamples(_MidiFile.Tracks[0].MidiEvents[x].deltaTime);
+                        _MidiFile.Tracks[0].MidiEvents[x].deltaTime = lastSample + DeltaTimetoSamples(_MidiFile.Tracks[0].MidiEvents[x].deltaTime);
                         lastSample = _MidiFile.Tracks[0].MidiEvents[x].deltaTime;
                         //Update tempo
                         if (_MidiFile.Tracks[0].MidiEvents[x].midiMetaEvent == MidiHelper.MidiMetaEvent.Tempo)
                         {
-                            _MidiFile.BeatsPerMinute = MidiHelper.MicroSecondsPerMinute / System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
+                            _MidiFile.BeatsPerMinute = MidiHelper.MicroSecondsPerMinute / System.Convert.ToDouble(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
                         }
                     }
                     //Set total time to proper value
@@ -270,7 +272,7 @@ namespace CSharpSynth.Sequencer
                 switch (midiEvent.midiMetaEvent)
                 {
                     case MidiHelper.MidiMetaEvent.Tempo:
-                        _MidiFile.BeatsPerMinute = MidiHelper.MicroSecondsPerMinute / System.Convert.ToUInt32(midiEvent.Parameters[0]);
+                        _MidiFile.BeatsPerMinute = (double)MidiHelper.MicroSecondsPerMinute / System.Convert.ToDouble(midiEvent.Parameters[0]);
                         break;
                     default:
                         break;
@@ -278,13 +280,13 @@ namespace CSharpSynth.Sequencer
             }
         }
         //--Private Methods
-        private int DeltaTimetoSamples(uint DeltaTime)
+        private int DeltaTimetoSamples(double DeltaTime)
         {
-            return SynthHelper.getSampleFromTime(sampleRate, (DeltaTime * (60.0f / (((int)_MidiFile.BeatsPerMinute) * _MidiFile.MidiHeader.DeltaTiming))));
+            return SynthHelper.getSampleFromTime(sampleRate, (DeltaTime * (60.0 / ((_MidiFile.BeatsPerMinute) * _MidiFile.MidiHeader.DeltaTiming))));
         }
         private void SetTime(TimeSpan time)
         {
-            int _stime = SynthHelper.getSampleFromTime(sampleRate, (float)time.TotalSeconds);
+            int _stime = SynthHelper.getSampleFromTime(sampleRate, time.TotalSeconds);
             if (_stime > sampleTime)
             {
                 SilentProcess(_stime - sampleTime);

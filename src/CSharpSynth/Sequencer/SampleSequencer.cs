@@ -90,7 +90,7 @@ namespace CSharpSynth.Sequencer
                         //Update tempo
                         if (_MidiFile.Tracks[0].MidiEvents[x].midiMetaEvent == MidiHelper.MidiMetaEvent.Tempo)
                         {
-                            BPM = MidiHelper.MicroSecondsPerMinute / (double)System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
+                            BPM = MidiHelper.MicroSecondsPerMinute / System.Convert.ToDouble(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
                         }
                     }
                     //Set total time to proper value
@@ -219,7 +219,7 @@ namespace CSharpSynth.Sequencer
             }
         }
         //--Private Methods
-        private double DeltaTimetoSamples(uint DeltaTime)
+        private double DeltaTimetoSamples(double DeltaTime)
         {
             return sampleRate * (DeltaTime * (60.0 / (BPM * _MidiFile.MidiHeader.DeltaTiming)));
         }

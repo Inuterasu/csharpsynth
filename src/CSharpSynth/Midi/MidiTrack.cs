@@ -4,7 +4,7 @@
     {
         //--Variables
         public uint NotesPlayed;
-        public ulong TotalTime;
+        public double TotalTime;
         public byte[] Programs;
         public byte[] DrumPrograms;
         public MidiEvent[] MidiEvents;
