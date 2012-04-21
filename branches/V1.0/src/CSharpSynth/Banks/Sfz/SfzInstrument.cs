@@ -45,6 +45,14 @@ namespace CSharpSynth.Banks.Sfz
         {
             return regions[noteMap[note]].Delay;
         }
+        public override float getAttackLevel(int note)
+        {
+            return .25f;
+        }
+        public override float getSustainLevel(int note)
+        {
+            return .2f;
+        }
         public override void enforceSampleRate(int sampleRate)
         {
             //The SFZ instrument automatically enforces the SampleRate in
@@ -96,8 +104,8 @@ namespace CSharpSynth.Banks.Sfz
                 }
                 else
                 {
-                    Currentsample = r.LoopStart + (Currentsample % r.LoopEnd) -1;
-                    time = (r.LoopStart / modifiedRate);
+                    Currentsample = r.LoopStart +(Currentsample % r.LoopEnd) - 1;
+                    time = (Currentsample / modifiedRate);
                 }
             }
             return neededSample.getSample(channel, Currentsample);// *r.Volume;

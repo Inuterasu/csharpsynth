@@ -14,6 +14,8 @@ namespace CSharpSynth.Synthesis
         public const double STARTING_FREQUENCY = 8.1757989156;
         public const double DOUBLE_PI = Math.PI * 2.0;
         public const float DEFAULT_AMPLITUDE = .25f;
+        public const float DEFAULT_SUSTAIN_LEVEL = .3f;
+        public const float DEFAULT_ATTACK_LEVEL = .35f;
         public enum WaveFormType { None, Sine, Cosine, Sawtooth, Pulse, Square, Triangle, WhiteNoise }
         //--Private Static
         private static Random rnd = new Random();
@@ -24,6 +26,10 @@ namespace CSharpSynth.Synthesis
             return rnd.NextDouble();
         }
         public static int getSampleFromTime(int sampleRate, float timeInSeconds)
+        {
+            return (int)(sampleRate * timeInSeconds);
+        }
+        public static int getSampleFromTime(int sampleRate, double timeInSeconds)
         {
             return (int)(sampleRate * timeInSeconds);
         }
