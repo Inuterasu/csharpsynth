@@ -20,8 +20,8 @@ namespace CSharpSynth.Synthesis
         private StreamSynthesizer synth;
         private double time;
         private float fadeMultiplier;
-        private float sustainGain = .3f;
-        private float attackGain = .35f;
+        //private float sustainGain;
+        //private float attackGain;
         //generators
         private double vibrafreq = 8;
         private double vibratime;
@@ -69,9 +69,8 @@ namespace CSharpSynth.Synthesis
             ADSR.ReleaseSampleTime = inst.getRelease(note);
             ADSR.HoldSampleTime = inst.getHold(note);
             ADSR.DecaySampleTime = inst.getDecay(note);
-            ADSR.SustainLevel = sustainGain;
-            ADSR.AttackLevel = attackGain;
-
+            ADSR.SustainLevel = inst.getSustainLevel(note);
+            ADSR.AttackLevel = inst.getAttackLevel(note);
             //Set counters and initial state
             if(ADSR.DelaySampleTime != 0)
                 ADSR.State = ADSR_Envelope.EnvelopeState.delay;

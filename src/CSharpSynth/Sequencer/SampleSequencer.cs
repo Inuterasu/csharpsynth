@@ -26,6 +26,7 @@ namespace CSharpSynth.Sequencer
         private bool looping = false;
         private int sampleTime;
         private int eventIndex;
+        private double BPM;
         private int sampleRate;
         private MidiSequencerEvent eventQueue;
         //--Public Properties
@@ -33,7 +34,11 @@ namespace CSharpSynth.Sequencer
         {
             get { return playing; }
         }
-        public int SampleTime
+        public double BeatsPerMinute
+        {
+            get { return BPM; }
+        }
+        public int CurrentSampleTime
         {
             get { return sampleTime; }
         }
@@ -70,25 +75,28 @@ namespace CSharpSynth.Sequencer
             {
                 try
                 {
+                    BPM = 120.0;
                     //Combine all tracks into 1 track that is organized from lowest to highest abs time
                     _MidiFile.CombineTracks();
                     //Convert delta time to sample time
-                    eventIndex = 0;
-                    uint lastSample = 0;
+                    eventIndex = 0;              
+                    double lastSample = 0;
+                    double currentSample = 0;
                     for (int x = 0; x < _MidiFile.Tracks[0].MidiEvents.Length; x++)
                     {
-                        _MidiFile.Tracks[0].MidiEvents[x].deltaTime = lastSample + (uint)DeltaTimetoSamples(_MidiFile.Tracks[0].MidiEvents[x].deltaTime);
-                        lastSample = _MidiFile.Tracks[0].MidiEvents[x].deltaTime;
+                        currentSample = lastSample + DeltaTimetoSamples(_MidiFile.Tracks[0].MidiEvents[x].deltaTime);
+                        _MidiFile.Tracks[0].MidiEvents[x].deltaTime = (uint)currentSample;
+                        lastSample = currentSample;
                         //Update tempo
                         if (_MidiFile.Tracks[0].MidiEvents[x].midiMetaEvent == MidiHelper.MidiMetaEvent.Tempo)
                         {
-                            _MidiFile.BeatsPerMinute = MidiHelper.MicroSecondsPerMinute / System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
+                            BPM = MidiHelper.MicroSecondsPerMinute / (double)System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
                         }
                     }
                     //Set total time to proper value
                     _MidiFile.Tracks[0].TotalTime = _MidiFile.Tracks[0].MidiEvents[_MidiFile.Tracks[0].MidiEvents.Length - 1].deltaTime;
                     //reset tempo
-                    _MidiFile.BeatsPerMinute = 120;
+                    BPM = 120;
                     //mark midi as ready for sequencing
                     _MidiFile.SequencerReady = true;
                 }
@@ -122,7 +130,7 @@ namespace CSharpSynth.Sequencer
             if (playing == true)
                 return;
             //set bpm
-            _MidiFile.BeatsPerMinute = 120;
+            BPM = 120.0;
             //Let the synth know that the sequencer is ready.
             eventIndex = 0;
             playing = true;
@@ -170,7 +178,7 @@ namespace CSharpSynth.Sequencer
                     //Clear vol, pan, and tune
                     synth.resetSynthControls();
                     //set bpm
-                    _MidiFile.BeatsPerMinute = 120;
+                    BPM = 120;
                     //Let the synth know that the sequencer is ready.
                     eventIndex = 0;
                 }
@@ -205,15 +213,15 @@ namespace CSharpSynth.Sequencer
                 sampleTime = 0;
                 synth.resetPrograms();
                 synth.resetSynthControls();
-                _MidiFile.BeatsPerMinute = 120;
+                BPM = 120;
                 eventIndex = 0;
                 SilentProcess(_stime, synth);
             }
         }
         //--Private Methods
-        private int DeltaTimetoSamples(uint DeltaTime)
+        private double DeltaTimetoSamples(uint DeltaTime)
         {
-            return SynthHelper.getSampleFromTime(sampleRate, (DeltaTime * (60.0f / (((int)_MidiFile.BeatsPerMinute) * _MidiFile.MidiHeader.DeltaTiming))));
+            return sampleRate * (DeltaTime * (60.0 / (BPM * _MidiFile.MidiHeader.DeltaTiming)));
         }
         private void SilentProcess(int amount, StreamSynthesizer synth)
         {

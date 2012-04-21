@@ -428,7 +428,7 @@ namespace CSharpSynth.Synthesis
                 int waitTime = 0;
                 for (int x = 0; x < eventlist.Events.Count; x++)
                 {
-                    waitTime = ((int)eventlist.Events[x].deltaTime - eventlist.Sequencer.SampleTime) - oldtime;
+                    waitTime = ((int)eventlist.Events[x].deltaTime - eventlist.Sequencer.CurrentSampleTime) - oldtime;
                     if (waitTime != 0)
                     {
                         node = activeVoices.First;

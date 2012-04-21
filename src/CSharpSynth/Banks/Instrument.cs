@@ -34,6 +34,14 @@ namespace CSharpSynth.Banks
         {
             return SynthHelper.getSampleFromTime(sampleRate, SynthHelper.DEFAULT_DECAY);
         }
+        public virtual float getSustainLevel(int note)
+        {
+            return SynthHelper.DEFAULT_SUSTAIN_LEVEL;
+        }
+        public virtual float getAttackLevel(int note)
+        {
+            return SynthHelper.DEFAULT_ATTACK_LEVEL;
+        }
         //--Abstract Methods
         public abstract void enforceSampleRate(int sampleRate);
         public abstract bool allSamplesSupportDualChannel();
