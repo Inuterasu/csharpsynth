@@ -1,0 +1,1 @@
+A synthesizer made in C# that will allow midi functionality using only the compact framework for any .net device. It's structure allows to be used in XNA or Unity engines or in any other engine that supports NET technology.
